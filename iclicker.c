@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <time.h>
 
 #include "libusb.h"
 
@@ -71,7 +72,7 @@ void sendIClickerBaseControlTransfer(iClickerBase *iBase, char* commandstring, i
   // sends the command to the base
   libusb_control_transfer(iBase->base,0x21,0x09,0x0200,0x0000,paddedcommand,64,1000);
   // waits 2ms for command to be processed. this is just an arbitrary time
-  usleep(2000);
+  usleep(20000);
   free(paddedcommand);
 }
 
@@ -207,6 +208,15 @@ void closeIClickerBase(iClickerBase* iBase)
   libusb_close(iBase->base); //close the device we opened
   libusb_exit(iBase->ctx); //needs to be called to end
 }
+
+typedef struct {
+  //iClicker user Id
+  int id;
+  //latest response
+  char lastResponse;
+  //time of the close
+  time_t lastClicked;
+} iClickerResponse;
 
 int main()
 {
