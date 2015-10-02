@@ -36,11 +36,17 @@ typedef struct
   libusb_device_handle *base;
   // frequency for iClickerBase
   char frequency[2];
+  // initialized
+  int initialized;
+  // is there a poll going on
+  int isPolling;
 } iClickerBase;
 
 iClickerBase* getIClickerBase()
 {
   iClickerBase* iBase = (iClickerBase*)malloc(sizeof(iClickerBase));
+  iBase->initialized = 0;
+  iBase->isPolling = 0;
   iBase->ctx = NULL;
   iBase->base = NULL;
   int rc = libusb_init (&iBase->ctx);
@@ -67,149 +73,186 @@ iClickerBase* getIClickerBase()
 
 void sendIClickerBaseControlTransfer(iClickerBase *iBase, char* commandstring, int length)
 {
-  // pads the command string
-  unsigned char* paddedcommand = padIClickerBaseCommand(commandstring, length);
-  // sends the command to the base
-  libusb_control_transfer(iBase->base,0x21,0x09,0x0200,0x0000,paddedcommand,64,1000);
-  // waits 2ms for command to be processed. this is just an arbitrary time
-  usleep(20000);
-  free(paddedcommand);
+  if(iBase->initialized)
+  {
+    // pads the command string
+    unsigned char* paddedcommand = padIClickerBaseCommand(commandstring, length);
+    // sends the command to the base
+    libusb_control_transfer(iBase->base,0x21,0x09,0x0200,0x0000,paddedcommand,64,1000);
+    // waits 2ms for command to be processed. this is just an arbitrary time
+    usleep(20000);
+    free(paddedcommand);
+  }
 }
 
 void setIClickerBaseDisplay(iClickerBase *iBase, char* displayString, int length, int line)
 {
-  // check if the length is between 0 and 16
-  if(length < 0 || length > 16) {
-    return;
-  }
-  // check if line number is valid
-  if(line < 0 || line > 1) {
-    return;
-  }
-  char* command = (char*)malloc(18*sizeof(char));
-  command[0] = 0x01;
-  command[1] = 0x13 + line;
-  int i;
-  for(i=0; i<length; i++)
+  if(iBase->initialized)
   {
-    command[2+i] = displayString[i];
+    // check if the length is between 0 and 16
+    if(length < 0 || length > 16) {
+      return;
+    }
+    // check if line number is valid
+    if(line < 0 || line > 1) {
+      return;
+    }
+    char* command = (char*)malloc(18*sizeof(char));
+    command[0] = 0x01;
+    command[1] = 0x13 + line;
+    int i;
+    for(i=0; i<length; i++)
+    {
+      command[2+i] = displayString[i];
+    }
+    for(i=i; i<16; i++)
+    {
+      command[2+i] = 0x20;
+    }
+    sendIClickerBaseControlTransfer(iBase, command, 18);
+    free(command);
   }
-  for(i=i; i<16; i++)
-  {
-    command[2+i] = 0x20;
-  }
-  sendIClickerBaseControlTransfer(iBase, command, 18);
-  free(command);
 }
 
 void setIClickerBaseFrequency(iClickerBase* iBase, char first, char second)
 {
-  if(first < 'a' || first > 'd' || second < 'a' || second > 'd')
+  if(iBase->base != NULL && !iBase->isPolling)
   {
-    return;
+    if(first < 'a' || first > 'd' || second < 'a' || second > 'd')
+    {
+      return;
+    }
+    iBase->frequency[0] = first;
+    iBase->frequency[1] = second;
+    char* command = (char*)malloc(4*sizeof(char));
+    command[0] = 0x01;
+    command[1] = 0x10;
+    command[2] = 0x21 + first - 'a';
+    command[3] = 0x41 + second - 'a';
+    sendIClickerBaseControlTransfer(iBase, command, 4);
+    command[1] = 0x16;
+    sendIClickerBaseControlTransfer(iBase, command, 2);
+    free(command);
   }
-  iBase->frequency[0] = first;
-  iBase->frequency[1] = second;
-  char* command = (char*)malloc(4*sizeof(char));
-  command[0] = 0x01;
-  command[1] = 0x10;
-  command[2] = 0x21 + first - 'a';
-  command[3] = 0x41 + second - 'a';
-  sendIClickerBaseControlTransfer(iBase, command, 4);
-  command[1] = 0x16;
-  sendIClickerBaseControlTransfer(iBase, command, 2);
-  free(command);
 }
 
 void setIClickerBaseVersion2(iClickerBase* iBase)
 {
+  if(iBase->base != NULL && !iBase->isPolling)
+  {
   char* command = (char*)malloc(2*sizeof(char));
   command[0] = 0x01;
   command[1] = 0x2d;
   sendIClickerBaseControlTransfer(iBase, command, 2);
   free(command);
+  }
 }
 
 void initIClickerBase(iClickerBase* iBase)
 {
-  setIClickerBaseFrequency(iBase, 'a', 'a');
+  if(!iBase->initialized)
+  {
+    setIClickerBaseFrequency(iBase, 'a', 'a');
 
-  char* command = (char*)malloc(9*sizeof(char));
-  command[0] = 0x01;
-  command[1] = 0x2a;
-  command[2] = 0x21;
-  command[3] = 0x41;
-  command[3] = 0x05;
-  sendIClickerBaseControlTransfer(iBase, command, 5);
-  command[1] = 0x12;
-  sendIClickerBaseControlTransfer(iBase, command, 2);
-  command[1] = 0x15;
-  sendIClickerBaseControlTransfer(iBase, command, 2);
-  command[1] = 0x16;
-  sendIClickerBaseControlTransfer(iBase, command, 2);
+    char* command = (char*)malloc(9*sizeof(char));
+    command[0] = 0x01;
+    command[1] = 0x2a;
+    command[2] = 0x21;
+    command[3] = 0x41;
+    command[4] = 0x05;
+    sendIClickerBaseControlTransfer(iBase, command, 5);
+    command[1] = 0x12;
+    sendIClickerBaseControlTransfer(iBase, command, 2);
+    command[1] = 0x15;
+    sendIClickerBaseControlTransfer(iBase, command, 2);
+    command[1] = 0x16;
+    sendIClickerBaseControlTransfer(iBase, command, 2);
 
-  setIClickerBaseVersion2(iBase);
+    setIClickerBaseVersion2(iBase);
 
-  command[1] = 0x29;
-  command[2] = 0xa1;
-  command[3] = 0x8f;
-  command[4] = 0x96;
-  command[5] = 0x8d;
-  command[6] = 0x99;
-  command[7] = 0x97;
-  command[8] = 0x8f;
-  sendIClickerBaseControlTransfer(iBase, command, 9);
-  command[1] = 0x17;
-  command[2] = 0x04;
-  sendIClickerBaseControlTransfer(iBase, command, 3);
-  command[1] = 0x17;
-  command[2] = 0x03;
-  sendIClickerBaseControlTransfer(iBase, command, 3);
-  command[1] = 0x16;
-  sendIClickerBaseControlTransfer(iBase, command, 2);
+    command[1] = 0x29;
+    command[2] = 0xa1;
+    command[3] = 0x8f;
+    command[4] = 0x96;
+    command[5] = 0x8d;
+    command[6] = 0x99;
+    command[7] = 0x97;
+    command[8] = 0x8f;
+    sendIClickerBaseControlTransfer(iBase, command, 9);
+    command[1] = 0x17;
+    command[2] = 0x04;
+    sendIClickerBaseControlTransfer(iBase, command, 3);
+    command[1] = 0x17;
+    command[2] = 0x03;
+    sendIClickerBaseControlTransfer(iBase, command, 3);
+    command[1] = 0x16;
+    sendIClickerBaseControlTransfer(iBase, command, 2);
+
+
+    iBase->initialized = 1;
+  }
 }
 
 void startIClickerBasePoll(iClickerBase* iBase)
 {
-  char* command = (char*)malloc(3*sizeof(char));
-  command[0] = 0x01;
-  command[1] = 0x17;
-  command[2] = 0x03;
-  sendIClickerBaseControlTransfer(iBase, command, 3);
-  command[1] = 0x17;
-  command[2] = 0x05;
-  sendIClickerBaseControlTransfer(iBase, command, 3);
-  command[1] = 0x11;
-  sendIClickerBaseControlTransfer(iBase, command, 2);
+  if(iBase->initialized && !iBase->isPolling)
+  {
+    char* command = (char*)malloc(3*sizeof(char));
+    command[0] = 0x01;
+    command[1] = 0x17;
+    command[2] = 0x03;
+    sendIClickerBaseControlTransfer(iBase, command, 3);
+    command[1] = 0x17;
+    command[2] = 0x05;
+    sendIClickerBaseControlTransfer(iBase, command, 3);
+    command[1] = 0x11;
+    sendIClickerBaseControlTransfer(iBase, command, 2);
+  }
 }
 
 void stopIClickerBasePoll(iClickerBase* iBase)
 {
-  char* command = (char*)malloc(3*sizeof(char));
-  command[0] = 0x01;
-  command[1] = 0x12;
-  sendIClickerBaseControlTransfer(iBase, command, 2);
-  command[1] = 0x16;
-  sendIClickerBaseControlTransfer(iBase, command, 2);
-  command[1] = 0x17;
-  command[2] = 0x01;
-  sendIClickerBaseControlTransfer(iBase, command, 3);
-  command[1] = 0x17;
-  command[2] = 0x03;
-  sendIClickerBaseControlTransfer(iBase, command, 3);
-  command[1] = 0x17;
-  command[2] = 0x04;
-  sendIClickerBaseControlTransfer(iBase, command, 3);
-
+  if(iBase->initialized && iBase->isPolling)
+  {
+    char* command = (char*)malloc(3*sizeof(char));
+    command[0] = 0x01;
+    command[1] = 0x12;
+    sendIClickerBaseControlTransfer(iBase, command, 2);
+    command[1] = 0x16;
+    sendIClickerBaseControlTransfer(iBase, command, 2);
+    command[1] = 0x17;
+    command[2] = 0x01;
+    sendIClickerBaseControlTransfer(iBase, command, 3);
+    command[1] = 0x17;
+    command[2] = 0x03;
+    sendIClickerBaseControlTransfer(iBase, command, 3);
+    command[1] = 0x17;
+    command[2] = 0x04;
+    sendIClickerBaseControlTransfer(iBase, command, 3);
+  }
 }
 
 void closeIClickerBase(iClickerBase* iBase)
 {
-  libusb_close(iBase->base); //close the device we opened
-  libusb_exit(iBase->ctx); //needs to be called to end
+  if(iBase->initialized)
+  {
+    if(iBase->isPolling)
+    {
+      stopIClickerBasePoll(iBase);
+    }
+    if(iBase->base != NULL)
+    {
+      libusb_close(iBase->base); //close the device we opened
+    }
+    if(iBase->ctx != NULL)
+    {
+      libusb_exit(iBase->ctx); //needs to be called to end
+    }
+  }
 }
 
-typedef struct {
+typedef struct
+{
   //iClicker user Id
   int id;
   //latest response
@@ -217,6 +260,36 @@ typedef struct {
   //time of the close
   time_t lastClicked;
 } iClickerResponse;
+
+//enum for poll types
+typedef enum {ALPHA, NUMERIC, ALPHANUMERIC} iPollType;
+
+typedef struct
+{
+  // base associated with the poll
+  iClickerBase iBase;
+  // is a poll running
+  int isPolling;
+  // poll type
+  iPollType type;
+
+} iClickerPoll;
+
+iClickerPoll* createIClickerPoll()
+{
+  iClickerPoll *iPoll = (iClickerPoll*)malloc(sizeof(iClickerPoll));
+  return iPoll;
+}
+
+void setIClickerPollType(iClickerPoll* iPoll, iPollType type)
+{
+  iPoll->type = type;
+}
+
+void closeIClickerPoll(iClickerPoll* iPoll)
+{
+  free(iPoll);
+}
 
 int main()
 {
