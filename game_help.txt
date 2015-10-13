@@ -1,0 +1,40 @@
+install pygame instructions:
+https://bitbucket.org/pygame/pygame/issues/82/homebrew-on-leopard-fails-to-install
+
+OR
+have brew installed and run:
+	sudo brew install sdl sdl_image sdl_mixer sdl_ttf portmidi 
+	sudo pip install hg+http://bitbucket.org/pygame/pygame
+
+if you get Error: Cowardly refusing to `sudo brew install` then do
+	sudo chown root /usr/local/bin/brew
+if you get undefined hg+ reference then do 
+	sudo brew install mercurial
+then try again
+
+to run game:
+	python battleSnakes.py
+
+game largely based on youtube tutorial https://www.youtube.com/watch?v=K5F-aGDIYaM&index=1&list=PL6gx4Cwl9DGAjkwJocj7vlc_mFU-4wXJq
+
+2 snakes : blue and green
+1 apple : red
+
+controls:
+green snake - arrow keys
+blue snake - WASD
+
+features implemented:
+snake movement
+apple spawning randomly
+snake growth upon eating apple
+game over at hitting boundary. other snake wins
+game over at colliding with itself. other snake wins
+game over when both snakes collide. snake which bites (whose head hits the other snake body) loses
+game over when both snakes collide head on. snake with longer length wins
+
+missing features : 
+menu
+2nd fruit which shrinks other snake
+snake at length 2 is allowed to reverse direction (corner case - should be a small fix)
+
