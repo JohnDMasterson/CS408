@@ -18,7 +18,7 @@ pygame.display.set_caption('Battle Snakes')
 
 pygame.display.update()
 
-FPS = 30
+FPS = 10
 
 clock = pygame.time.Clock()
 
@@ -79,6 +79,9 @@ def gameLoop():
 			if winner == 2:
 				message_to_screen("Blue snake won, press Q to quit and P to play again", red)
 				pygame.display.update()
+			if winner == 0:
+				message_to_screen("TIED ! , press Q to quit and P to play again", red)
+                                pygame.display.update()
 			winner = 0
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN:
@@ -164,6 +167,8 @@ def gameLoop():
 				winner = 1
 			elif len(snakelist2) > len(snakelist1):
 				winner = 2
+			else:
+				winner = 0
 		
 		#checking for self collision	
 		for each1 in snakelist1[:-1]:
