@@ -18,7 +18,7 @@ to run game:
 game largely based on youtube tutorial https://www.youtube.com/watch?v=K5F-aGDIYaM&index=1&list=PL6gx4Cwl9DGAjkwJocj7vlc_mFU-4wXJq
 
 2 snakes : blue and green
-1 apple : red
+1 apple : image
 
 controls:
 green snake - arrow keys
@@ -33,8 +33,14 @@ game over at colliding with itself. other snake wins
 game over when both snakes collide. snake which bites (whose head hits the other snake body) loses
 game over when both snakes collide head on. snake with longer length wins
 
-missing features : 
-menu
-2nd fruit which shrinks other snake
-snake at length 2 is allowed to reverse direction (corner case - should be a small fix)
+new features:
+start menu
+check for tie (head on collision same length + out of bounds for both at the same / with same length)
+reverse direction input is ignored
+snakes now have initial direction
+added image for apple
+only tested image with snake head - will work on it soon
 
+missing features : 
+2nd fruit which shrinks other snake
+snake head images
