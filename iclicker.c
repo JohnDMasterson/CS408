@@ -8,6 +8,7 @@
 
 #include "libusb.h"
 
+
 unsigned char* padIClickerBaseCommand(char* unpadded, int length)
 {
   if(length < 0 || length > 64)
@@ -62,12 +63,41 @@ iClickerBase* getIClickerBase()
   iBase->base = libusb_open_device_with_vid_pid(iBase->ctx, VENDOR_ID, PRODUCT_ID); //these are vendorID and productID I found for my usb device
   if(iBase->base != NULL)
   {
+
+      int iface, nb_ifaces;
+      struct libusb_config_descriptor *conf_desc;
+      struct libusb_device *dev;
+      dev = libusb_get_device(iBase->base);
+      libusb_get_config_descriptor(dev, 0, &conf_desc);
+      nb_ifaces = conf_desc->bNumInterfaces;
+      printf("(bus %d, device %d)",
+		    libusb_get_bus_number(dev), libusb_get_device_address(dev));
+      printf("Number of interfaces: %d\n", nb_ifaces);
+
     //find out if kernel driver is attached
-    if(libusb_kernel_driver_active(iBase->base, 0)) {
+    if(libusb_kernel_driver_active(iBase->base, 0) == 1) {
+      printf("Kernel driver already active\n");
       //detach it
-      libusb_detach_kernel_driver(iBase->base, 0);
+      if(libusb_detach_kernel_driver(iBase->base, 0) == 0)
+      {
+        printf("Kernel driver detached\n");
+      }
+      else
+      {
+        printf("Kernel driver NOT detached\n");
+      }
     }
+    else
+    {
+      printf("Kernel driver NOT already active\n");
+    }
+
+
+    //libusb_release_interface(iBase->base, 0);
+    //rc = libusb_claim_interface(iBase->base, 0);
   }
+
+
   return iBase;
 }
 
@@ -251,6 +281,24 @@ void closeIClickerBase(iClickerBase* iBase)
   }
 }
 
+void displayIClickerBaseResponse(iClickerBase* iBase)
+{
+  unsigned char* data = (unsigned char*)malloc(64*sizeof(char));
+  int len;
+  while (libusb_interrupt_transfer(iBase->base, 0x83, data, 64, &len, 0) <0){};
+  printf("Transfer received");
+  free(data);
+
+  /*
+  while(libusb_control_transfer(iBase->base,
+      LIBUSB_ENDPOINT_IN|LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE,
+		  0x09,0x0200,0x0000,data,64,1000)){
+    printf("Transfer received\n");
+    printf("%s\n", data);
+      };
+      */
+}
+
 typedef struct
 {
   //iClicker user Id
@@ -298,11 +346,12 @@ int main()
   initIClickerBase(iBase);
   setIClickerBaseFrequency(iBase, 'c', 'd');
 
-  setIClickerBaseDisplay(iBase, "Randy is", 8, 0);
+  setIClickerBaseDisplay(iBase, "Now Polling", 11, 0);
   setIClickerBaseDisplay(iBase, "  ", 2, 1);
   startIClickerBasePoll(iBase);
-  //stopIClickerBasePoll(iBase);
-
-  //closeIClickerBase(iBase);
+  displayIClickerBaseResponse(iBase);
+  stopIClickerBasePoll(iBase);
+  setIClickerBaseDisplay(iBase, "Polling ended", 13, 0);
+  closeIClickerBase(iBase);
   return 0;
 }
