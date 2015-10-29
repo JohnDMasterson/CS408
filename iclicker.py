@@ -145,11 +145,39 @@ class iClickerBase(object):
         self.syncronous_ctrl_transfer(data)
 
     def show_responses(self):
-        while True:
+        show = 0
+        while show < 10:
             data = self.read_data()
             if data is not None:
                 packet = iPacket(data)
                 packet.print_packet()
+                response = iClickerResponse(data[:32])
+                response.parse_alpha_response()
+                response.print_response()
+                show = show + 1
+
+class iClickerResponse(object):
+
+    def __init__(self, data):
+        self.data = data
+        self.response = ''
+        self.id = ''
+
+    def parse_alpha_response(self):
+        self.response = self.data[2] - 0x81 + 65
+        self.get_id_from_response()
+
+    def get_id_from_response(self):
+        for i in range(31, 0, -1):
+            if self.data[i] != 0:
+                break
+        seq_start = i-3
+        clicker_seq = self.data[seq_start : seq_start+3]
+        clicker_id = ''.join("%02X" % b for b in clicker_seq)
+        print clicker_id
+
+    def print_response(self):
+        print self.response
 
 if __name__ == '__main__':
     packet = iPacket([0x01, 0x83])
