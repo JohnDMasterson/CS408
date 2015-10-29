@@ -44,81 +44,112 @@ class iClickerBase(object):
     PACKET_LENGTH = 64
     TIMEOUT = 100
 
+    FREQ_DICT = {'a':0,'A':0, 'b':1,'B':1, 'c':2,'C':2, 'd':3,'D':3}
+
     def __init__(self):
         self.iBase = None
         self.initialized = False
         self.frequency = None
+        self.usb_lock = threading.RLock()
 
     def ctrl_transfer(self, data):
         packet = iPacket(data)
-        self.iBase.ctrl_transfer(BTR, PBR, VAL, IDX, packet.packet_data())
+        with self.usb_lock:
+            self.iBase.ctrl_transfer(self.BRT, self.PBR, self.VAL, self.IDX, packet.packet_data())
         time.sleep(0.2)
 
+    def syncronous_ctrl_transfer(self, data):
+        self.ctrl_transfer(data)
+        packet = self.read_packet()
+        packet.print_packet()
+
     def _read(self):
-        data = self.iBase.read(EIN, PACKET_LENGTH, TIMEOUT);
+        with self.usb_lock:
+            try:
+                data = self.iBase.read(self.EIN, self.PACKET_LENGTH, self.TIMEOUT)
+            except:
+                data = None
+        return data
+
+    def read_data(self):
+        data = self._read()
+        return data
+
+    def read_packet(self):
+        data = self._read()
         packet = iPacket(data)
         return packet
 
     def get_base(self):
-        backend = usb.backend.libusb1.get_backend(find_library=lambda x: "/usr/lib/libusb-1.0.so")
-        self.iBase = usb.core.find(idVendor=self.VENDOR_ID, idProduct=self.PRODUCT_ID, backend=backend)
-        if self.device.is_kernel_driver_active(0):
-            self.device.detach_kernel_driver(0)
-        self.device.set_configuration()
+        with self.usb_lock:
+            backend = usb.backend.libusb1.get_backend(find_library=lambda x: "/usr/lib/libusb-1.0.so")
+            self.iBase = usb.core.find(idVendor=self.VID, idProduct=self.PID, backend=backend)
+            if self.iBase.is_kernel_driver_active(0):
+                self.iBase.detach_kernel_driver(0)
+            self.iBase.set_configuration()
 
     def set_poll_type(self, poll_type = 'alpha'):
         self.poll_type = {'alpha': 0, 'numeric': 1, 'alphanumeric': 2}[poll_type]
-        data = [0x01, 0x19, 0x66+poll_type, 0x0a, 0x01]
-        self.ctrl_transfer(data);
+        data = [0x01, 0x19, 0x66+self.poll_type, 0x0a, 0x01]
+        self.syncronous_ctrl_transfer(data)
 
     def set_version_2(self):
         data = [0x01, 0x2D]
-        self.ctrl_transfer(data);
+        self.syncronous_ctrl_transfer(data)
 
     def set_frequency(self, first = 'A', second = 'A'):
-        first = {'a':1,'A':1, 'b':2,'B':2, 'c':3,'C':3, 'd':4,'D':4, 'E':5,'E':5}
-        second = {'a':1,'A':1, 'b':2,'B':2, 'c':3,'C':3, 'd':4,'D':4, 'E':5,'E':5}
+        first = self.FREQ_DICT[first]
+        second = self.FREQ_DICT[second]
         self.frequency = [first, second]
-        data = [0x01, 0x10, 0x21 + first, 0x41 + second]
-        self.ctrl_transfer(data)
+        first = (first + 0x21)
+        second = 0x41 + second
+        data = [0x01, 0x10, first, second]
+        self.syncronous_ctrl_transfer(data)
         data = [0x01, 0x16]
-        self.ctrl_transfer(data)
+        self.syncronous_ctrl_transfer(data)
 
     def init_base(self):
         self.set_frequency()
 
         data = [0x01, 0x2A, 0x21, 0x21, 0x05]
-        self.ctrl_transfer(data)
+        self.syncronous_ctrl_transfer(data)
         data = [0x01, 0x12]
-        self.ctrl_transfer(data)
+        self.syncronous_ctrl_transfer(data)
         data = [0x01, 0x15]
-        self.ctrl_transfer(data)
+        self.syncronous_ctrl_transfer(data)
         data = [0x01, 0x16]
-        self.ctrl_transfer(data)
+        self.syncronous_ctrl_transfer(data)
 
         self.set_version_2()
 
         data = [0x01, 0x29, 0xA1, 0x8F, 0x96, 0x8D, 0x99, 0x97, 0x8F]
-        self.ctrl_transfer(data)
+        self.syncronous_ctrl_transfer(data)
         data = [0x01, 0x17, 0x04]
-        self.ctrl_transfer(data)
+        self.syncronous_ctrl_transfer(data)
         data = [0x01, 0x17, 0x03]
-        self.ctrl_transfer(data)
+        self.syncronous_ctrl_transfer(data)
         data = [0x01, 0x16]
-        self.ctrl_transfer(data)
+        self.syncronous_ctrl_transfer(data)
 
         self.initialized = True
 
     def start_poll(self, poll_type = 'alpha'):
         data = [0x01, 0x17, 0x03]
-        self.ctrl_transfer(data)
+        self.syncronous_ctrl_transfer(data)
         data = [0x01, 0x17, 0x05]
-        self.ctrl_transfer(data)
+        self.syncronous_ctrl_transfer(data)
 
         self.set_poll_type(poll_type)
 
         data = [0x01, 0x11]
-        self.ctrl_transfer(data)
+        self.syncronous_ctrl_transfer(data)
+
+    def show_responses(self):
+        while True:
+            data = self.read_data()
+            if data is not None:
+                packet = iPacket(data)
+                packet.print_packet()
 
 if __name__ == '__main__':
     packet = iPacket([0x01, 0x83])
@@ -128,3 +159,5 @@ if __name__ == '__main__':
     base.get_base()
     base.init_base()
     base.start_poll()
+
+    base.show_responses()

@@ -124,7 +124,7 @@ void displayIClickerBaseInterruptIn(iClickerBase* iBase)
   int i;
   for(i = 0; i<64; i++){data[i] = 0;}
   int len;
-  int tries = libusb_interrupt_transfer(iBase->base, 0x83, data, 64, &len, 1000);
+  int tries = libusb_interrupt_transfer(iBase->base, 0x83, data, 64, &len, 2000);
   if(tries) printUSBPacket(data, len);
   free(data);
 }
