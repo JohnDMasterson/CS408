@@ -8,8 +8,6 @@
 
 #include "libusb.h"
 
-<<<<<<< HEAD
-=======
 void printUSBPacket(unsigned char* data, int length)
 {
   int i;
@@ -23,7 +21,6 @@ void printUSBPacket(unsigned char* data, int length)
   }
   printf("\n\n");
 }
->>>>>>> b5d0b4a241966fda8c9af28f6a44cb56355025ca
 
 unsigned char* padIClickerBaseCommand(char* unpadded, int length)
 {
@@ -105,17 +102,6 @@ iClickerBase* getIClickerBase()
       {
         printf("Kernel driver NOT detached\n");
       }
-<<<<<<< HEAD
-    }
-    else
-    {
-      printf("Kernel driver NOT already active\n");
-    }
-
-
-    //libusb_release_interface(iBase->base, 0);
-    //rc = libusb_claim_interface(iBase->base, 0);
-=======
     }
     else
     {
@@ -125,7 +111,6 @@ iClickerBase* getIClickerBase()
 
     //libusb_release_interface(iBase->base, 0);
     rc = libusb_claim_interface(iBase->base, 0);
->>>>>>> b5d0b4a241966fda8c9af28f6a44cb56355025ca
   }
 
 
@@ -344,21 +329,6 @@ void closeIClickerBase(iClickerBase* iBase)
 void displayIClickerBaseResponse(iClickerBase* iBase)
 {
   unsigned char* data = (unsigned char*)malloc(64*sizeof(char));
-<<<<<<< HEAD
-  int len;
-  while (libusb_interrupt_transfer(iBase->base, 0x83, data, 64, &len, 0) <0){};
-  printf("Transfer received");
-  free(data);
-
-  /*
-  while(libusb_control_transfer(iBase->base,
-      LIBUSB_ENDPOINT_IN|LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE,
-		  0x09,0x0200,0x0000,data,64,1000)){
-    printf("Transfer received\n");
-    printf("%s\n", data);
-      };
-      */
-=======
   int i;
   for(i = 0; i<64; i++){data[i] = 0;}
   int len = 0;
@@ -371,7 +341,6 @@ void displayIClickerBaseResponse(iClickerBase* iBase)
   };
   printUSBPacket(data, len);
   free(data);
->>>>>>> b5d0b4a241966fda8c9af28f6a44cb56355025ca
 }
 
 typedef struct
@@ -421,10 +390,7 @@ int main()
   displayIClickerBaseInterruptIn(iBase);
 
   setIClickerBaseDisplay(iBase, "Now Polling", 11, 0);
-<<<<<<< HEAD
-=======
   displayIClickerBaseInterruptIn(iBase);
->>>>>>> b5d0b4a241966fda8c9af28f6a44cb56355025ca
   setIClickerBaseDisplay(iBase, "  ", 2, 1);
   startIClickerBasePoll(iBase);
   displayIClickerBaseResponse(iBase);
