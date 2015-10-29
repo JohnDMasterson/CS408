@@ -47,10 +47,12 @@ class iClickerBase(object):
     def __init__(self):
         self.iBase = None
         self.initialized = False
+        self.frequency = None
 
     def ctrl_transfer(self, data):
         packet = iPacket(data)
         self.iBase.ctrl_transfer(BTR, PBR, VAL, IDX, packet.packet_data())
+        time.sleep(0.2)
 
     def _read(self):
         data = self.iBase.read(EIN, PACKET_LENGTH, TIMEOUT);
@@ -69,6 +71,60 @@ class iClickerBase(object):
         data = [0x01, 0x19, 0x66+poll_type, 0x0a, 0x01]
         self.ctrl_transfer(data);
 
+    def set_version_2(self):
+        data = [0x01, 0x2D]
+        self.ctrl_transfer(data);
+
+    def set_frequency(self, first = 'A', second = 'A'):
+        first = {'a':1,'A':1, 'b':2,'B':2, 'c':3,'C':3, 'd':4,'D':4, 'E':5,'E':5}
+        second = {'a':1,'A':1, 'b':2,'B':2, 'c':3,'C':3, 'd':4,'D':4, 'E':5,'E':5}
+        self.frequency = [first, second]
+        data = [0x01, 0x10, 0x21 + first, 0x41 + second]
+        self.ctrl_transfer(data)
+        data = [0x01, 0x16]
+        self.ctrl_transfer(data)
+
+    def init_base(self):
+        self.set_frequency()
+
+        data = [0x01, 0x2A, 0x21, 0x21, 0x05]
+        self.ctrl_transfer(data)
+        data = [0x01, 0x12]
+        self.ctrl_transfer(data)
+        data = [0x01, 0x15]
+        self.ctrl_transfer(data)
+        data = [0x01, 0x16]
+        self.ctrl_transfer(data)
+
+        self.set_version_2()
+
+        data = [0x01, 0x29, 0xA1, 0x8F, 0x96, 0x8D, 0x99, 0x97, 0x8F]
+        self.ctrl_transfer(data)
+        data = [0x01, 0x17, 0x04]
+        self.ctrl_transfer(data)
+        data = [0x01, 0x17, 0x03]
+        self.ctrl_transfer(data)
+        data = [0x01, 0x16]
+        self.ctrl_transfer(data)
+
+        self.initialized = True
+
+    def start_poll(self, poll_type = 'alpha'):
+        data = [0x01, 0x17, 0x03]
+        self.ctrl_transfer(data)
+        data = [0x01, 0x17, 0x05]
+        self.ctrl_transfer(data)
+
+        self.set_poll_type(poll_type)
+
+        data = [0x01, 0x11]
+        self.ctrl_transfer(data)
+
 if __name__ == '__main__':
     packet = iPacket([0x01, 0x83])
     packet.print_packet()
+
+    base = iClickerBase()
+    base.get_base()
+    base.init_base()
+    base.start_poll()
