@@ -154,16 +154,23 @@ class iClickerBase(object):
                 response = iClickerResponse(data[:32])
                 response.parse_alpha_response()
                 response.print_response()
+                response = iClickerResponse(data[32:64])
+                response.parse_alpha_response()
+                response.print_response()
                 show = show + 1
 
 class iClickerResponse(object):
 
     def __init__(self, data):
         self.data = data
-        self.response = ''
-        self.id = ''
+        self.response = None
+        self.clicker_id = None
+        self.response_num = None
 
     def parse_alpha_response(self):
+        length = len(self.data)
+        if length < 32:
+            return
         self.response = self.data[2] - 0x81 + 65
         self.get_id_from_response()
 
@@ -171,13 +178,20 @@ class iClickerResponse(object):
         for i in range(31, 0, -1):
             if self.data[i] != 0:
                 break
+        self.response_num = self.data[i]
         seq_start = i-3
+        if seq_start > 27 or seq_start < 3:
+            return
         clicker_seq = self.data[seq_start : seq_start+3]
+        clicker_check = clicker_seq[0] ^ clicker_seq[1] ^ clicker_seq[2]
+        clicker_seq.append(clicker_check)
         clicker_id = ''.join("%02X" % b for b in clicker_seq)
-        print clicker_id
+        self.clicker_id = clicker_id
 
     def print_response(self):
-        print self.response
+        print "Clicker Id: %s" % self.clicker_id
+        print "Clicker Response: %s" % self.response
+        print "Clicker Response Num: %d" % self.response_num
 
 if __name__ == '__main__':
     packet = iPacket([0x01, 0x83])
