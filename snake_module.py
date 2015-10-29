@@ -39,9 +39,18 @@ class Snake:
 	def self_collided(self):
 		for each in self.snake_list[:-1]:
 			if each == self.head:
-				print "Collision"
-				return False
+				print "Self collision"
+				return True
 		return False
+
+	def collided(self, other_snake):
+		if self.self_collided():
+			return True
+		for each in other_snake.snake_list[:-1]:
+			if each == self.head:
+				print "Collision"
+				return True
+                return False
 
 	def opposite_direction(self, new_direction):
 		if new_direction == 'u':
@@ -103,7 +112,7 @@ class Board:
                 self.width = self.num_hor_blocks*block_size
                 self.height = self.num_ver_blocks*block_size
 		self.margin = int(0.5*(height - self.height))
-                self.block_size = block_size
+                self.block_size = int(block_size)
                 self.empty_blocks = range(1, self.num_hor_blocks * self.num_ver_blocks+1)
 
 	def int_to_point(self, num):
