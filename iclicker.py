@@ -72,3 +72,7 @@ class iClickerBase(object):
         self.poll_type = = {'alpha': 0, 'numeric': 1, 'alphanumeric': 2}[poll_type]
         data = [0x01, 0x19, 0x66+poll_type, 0x0a, 0x01]
         self.ctrl_transfer(data);
+
+if __name__ == '__main__':
+    packet = iPcaket([0x01, 0x83])
+    packet.print_packet
