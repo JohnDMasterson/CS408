@@ -8,6 +8,22 @@
 
 #include "libusb.h"
 
+<<<<<<< HEAD
+=======
+void printUSBPacket(unsigned char* data, int length)
+{
+  int i;
+  printf("bytes transfered: %d\n", length);
+  printf("data: ");
+  for(i=0; i<length; i++)
+  {
+    if(i%16 == 0){printf("\n");}
+    if(i%8 == 0){printf("\t");}
+    printf("%02X ", data[i]);
+  }
+  printf("\n\n");
+}
+>>>>>>> b5d0b4a241966fda8c9af28f6a44cb56355025ca
 
 unsigned char* padIClickerBaseCommand(char* unpadded, int length)
 {
@@ -28,6 +44,9 @@ unsigned char* padIClickerBaseCommand(char* unpadded, int length)
   }
   return ret;
 }
+
+//enum for poll types
+typedef enum {ALPHA, NUMERIC, ALPHANUMERIC} iPollType;
 
 typedef struct
 {
@@ -86,6 +105,7 @@ iClickerBase* getIClickerBase()
       {
         printf("Kernel driver NOT detached\n");
       }
+<<<<<<< HEAD
     }
     else
     {
@@ -95,10 +115,33 @@ iClickerBase* getIClickerBase()
 
     //libusb_release_interface(iBase->base, 0);
     //rc = libusb_claim_interface(iBase->base, 0);
+=======
+    }
+    else
+    {
+      printf("Kernel driver NOT already active\n");
+    }
+
+
+    //libusb_release_interface(iBase->base, 0);
+    rc = libusb_claim_interface(iBase->base, 0);
+>>>>>>> b5d0b4a241966fda8c9af28f6a44cb56355025ca
   }
 
 
   return iBase;
+}
+
+
+void displayIClickerBaseInterruptIn(iClickerBase* iBase)
+{
+  unsigned char* data = (unsigned char*)malloc(64*sizeof(char));
+  int i;
+  for(i = 0; i<64; i++){data[i] = 0;}
+  int len;
+  int tries = libusb_interrupt_transfer(iBase->base, 0x83, data, 64, &len, 1000);
+  if(tries) printUSBPacket(data, len);
+  free(data);
 }
 
 void sendIClickerBaseControlTransfer(iClickerBase *iBase, char* commandstring, int length)
@@ -109,9 +152,8 @@ void sendIClickerBaseControlTransfer(iClickerBase *iBase, char* commandstring, i
     unsigned char* paddedcommand = padIClickerBaseCommand(commandstring, length);
     // sends the command to the base
     libusb_control_transfer(iBase->base,0x21,0x09,0x0200,0x0000,paddedcommand,64,1000);
-    // waits 2ms for command to be processed. this is just an arbitrary time
-    usleep(20000);
     free(paddedcommand);
+    displayIClickerBaseInterruptIn(iBase);
   }
 }
 
@@ -178,6 +220,21 @@ void setIClickerBaseVersion2(iClickerBase* iBase)
   }
 }
 
+void setIClicketBasePollType(iClickerBase* iBase, iPollType type)
+{
+  if(iBase->base != NULL && !iBase->isPolling)
+  {
+  char* command = (char*)malloc(5*sizeof(char));
+  command[0] = 0x01;
+  command[1] = 0x19;
+  command[2] = 0x66 + type;
+  command[3] = 0x00;
+  command[4] = 0x00;
+  sendIClickerBaseControlTransfer(iBase, command, 5);
+  free(command);
+  }
+}
+
 void initIClickerBase(iClickerBase* iBase)
 {
   if(!iBase->initialized)
@@ -197,6 +254,8 @@ void initIClickerBase(iClickerBase* iBase)
     sendIClickerBaseControlTransfer(iBase, command, 2);
     command[1] = 0x16;
     sendIClickerBaseControlTransfer(iBase, command, 2);
+
+
 
     setIClickerBaseVersion2(iBase);
 
@@ -235,6 +294,7 @@ void startIClickerBasePoll(iClickerBase* iBase)
     command[1] = 0x17;
     command[2] = 0x05;
     sendIClickerBaseControlTransfer(iBase, command, 3);
+    setIClicketBasePollType(iBase, 0);
     command[1] = 0x11;
     sendIClickerBaseControlTransfer(iBase, command, 2);
   }
@@ -284,6 +344,7 @@ void closeIClickerBase(iClickerBase* iBase)
 void displayIClickerBaseResponse(iClickerBase* iBase)
 {
   unsigned char* data = (unsigned char*)malloc(64*sizeof(char));
+<<<<<<< HEAD
   int len;
   while (libusb_interrupt_transfer(iBase->base, 0x83, data, 64, &len, 0) <0){};
   printf("Transfer received");
@@ -297,6 +358,20 @@ void displayIClickerBaseResponse(iClickerBase* iBase)
     printf("%s\n", data);
       };
       */
+=======
+  int i;
+  for(i = 0; i<64; i++){data[i] = 0;}
+  int len = 0;
+  int ret = 0;
+  int tries = 0;
+  while ( len <= 0 || ret < 0){
+    ret = libusb_interrupt_transfer(iBase->base, 0x83, data, 64, &len, 1000);
+    printf("%d\n",ret);
+    printUSBPacket(data, len);
+  };
+  printUSBPacket(data, len);
+  free(data);
+>>>>>>> b5d0b4a241966fda8c9af28f6a44cb56355025ca
 }
 
 typedef struct
@@ -309,13 +384,10 @@ typedef struct
   time_t lastClicked;
 } iClickerResponse;
 
-//enum for poll types
-typedef enum {ALPHA, NUMERIC, ALPHANUMERIC} iPollType;
-
 typedef struct
 {
   // base associated with the poll
-  iClickerBase iBase;
+  iClickerBase* iBase;
   // is a poll running
   int isPolling;
   // poll type
@@ -332,6 +404,7 @@ iClickerPoll* createIClickerPoll()
 void setIClickerPollType(iClickerPoll* iPoll, iPollType type)
 {
   iPoll->type = type;
+  setIClicketBasePollType(iPoll->iBase, type);
 }
 
 void closeIClickerPoll(iClickerPoll* iPoll)
@@ -345,8 +418,13 @@ int main()
 
   initIClickerBase(iBase);
   setIClickerBaseFrequency(iBase, 'c', 'd');
+  displayIClickerBaseInterruptIn(iBase);
 
   setIClickerBaseDisplay(iBase, "Now Polling", 11, 0);
+<<<<<<< HEAD
+=======
+  displayIClickerBaseInterruptIn(iBase);
+>>>>>>> b5d0b4a241966fda8c9af28f6a44cb56355025ca
   setIClickerBaseDisplay(iBase, "  ", 2, 1);
   startIClickerBasePoll(iBase);
   displayIClickerBaseResponse(iBase);
