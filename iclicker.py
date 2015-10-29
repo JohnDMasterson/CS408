@@ -12,27 +12,23 @@ class iPacket(object):
     def __init__(self, data=None):
         if data is None:
             data = []
-        # Remove spaces
-        data = data.replace(' ', '')
-        # Make array of unsigned chars
-        length = len(data)
-        data = array('B', (int(data[i:i+2],16) for i in range(0, length, 2)))
         self.packet = array('B', data[:64])
         length = len(self.packet)
-        self.packet.extend([0]*64-length)
+        self.packet.extend([0]* (64-length))
 
     def packet_data(self):
         return self.packet.tostring()
 
     def print_packet(self):
+	print("Packet Data:")
         i = 0;
-        for character in self.packet
+        for character in self.packet:
             if i%16 == 0 :
-                print("")
+                print ""
             if i%8 == 0 :
-                print("\t"),
-            print("%X ",character),
-            i++
+                print "\t" ,
+            print "%02X " % character ,
+            i = i+1
 
 class iClickerBase(object):
 
@@ -54,7 +50,7 @@ class iClickerBase(object):
 
     def ctrl_transfer(self, data):
         packet = iPacket(data)
-        self.iBase.ctrl_transfer(BTR, PBR, VAL, IDX, packet.packet_data))
+        self.iBase.ctrl_transfer(BTR, PBR, VAL, IDX, packet.packet_data())
 
     def _read(self):
         data = self.iBase.read(EIN, PACKET_LENGTH, TIMEOUT);
@@ -68,11 +64,11 @@ class iClickerBase(object):
             self.device.detach_kernel_driver(0)
         self.device.set_configuration()
 
-    def set_poll_type(self, poll_type = 'alpha')
-        self.poll_type = = {'alpha': 0, 'numeric': 1, 'alphanumeric': 2}[poll_type]
+    def set_poll_type(self, poll_type = 'alpha'):
+        self.poll_type = {'alpha': 0, 'numeric': 1, 'alphanumeric': 2}[poll_type]
         data = [0x01, 0x19, 0x66+poll_type, 0x0a, 0x01]
         self.ctrl_transfer(data);
 
 if __name__ == '__main__':
-    packet = iPcaket([0x01, 0x83])
-    packet.print_packet
+    packet = iPacket([0x01, 0x83])
+    packet.print_packet()
