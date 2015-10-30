@@ -309,16 +309,18 @@ def gameLoop():
 		if lead_x1 == randApple2X and lead_y1 == randApple2Y:
                         randApple2X = round(random.randrange(0, display_width - block_size)/10.0)*10.0
                         randApple2Y = round(random.randrange(0, display_height - block_size)/10.0)*10.0
-                        snakelength1 = snakelength1 - 1
-			gameOver = True
-			winner = 2
+                        snakelength2 = snakelength2 - 1
+			if snakelength2 == 0:
+				gameOver = True
+				winner = 1
 			
 		elif lead_x2 == randApple2X and lead_y2 == randApple2Y:
                         randApple2X = round(random.randrange(0, display_width - block_size)/10.0)*10.0
                         randApple2Y = round(random.randrange(0, display_height - block_size)/10.0)*10.0
-                        snakelength2 = snakelength2 - 1
-			gameOver = True
-			winner = 1
+                        snakelength1 = snakelength1 - 1
+			if snakelength1 == 0:
+				gameOver = True
+				winner = 2
 
 		clock.tick(FPS)
 	
