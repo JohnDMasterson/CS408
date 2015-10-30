@@ -57,8 +57,8 @@ def snake1(snakelist1, block_size):
 	'''
 	gameDisplay.blit(head1, (snakelist1[-1][0], snakelist1[-1][1]))
 	for XnY in snakelist1[:-1]:
-	for XnY in snakelist1:
-		pygame.draw.rect(gameDisplay, green, [XnY[0], XnY[1], block_size, block_size])	
+		for XnY in snakelist1:
+			pygame.draw.rect(gameDisplay, green, [XnY[0], XnY[1], block_size, block_size])	
 
 def snake2(snakelist2, block_size):
 	for XnY in snakelist2:
