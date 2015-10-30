@@ -46,6 +46,8 @@ class iClickerBase(object):
 
     FREQ_DICT = {'a':0,'A':0, 'b':1,'B':1, 'c':2,'C':2, 'd':3,'D':3}
 
+    POLL_DICT = {'alpha':0, 'numeric':1, 'alphanumeric':2}
+
     def __init__(self):
         self.iBase = None
         self.initialized = False
@@ -89,7 +91,7 @@ class iClickerBase(object):
             self.iBase.set_configuration()
 
     def set_poll_type(self, poll_type = 'alpha'):
-        self.poll_type = {'alpha': 0, 'numeric': 1, 'alphanumeric': 2}[poll_type]
+        self.poll_type = self.POLL_DICT[poll_type]
         data = [0x01, 0x19, 0x66+self.poll_type, 0x0a, 0x01]
         self.syncronous_ctrl_transfer(data)
 
@@ -108,10 +110,18 @@ class iClickerBase(object):
         data = [0x01, 0x16]
         self.syncronous_ctrl_transfer(data)
 
+    def set_base_display(self, string, line):
+        line = 0x13 + line
+        data = [0x01, line]
+        string = string[:16]
+        string = string + ' '*(16-len(string))
+        data.extend(ord(c) for c in string)
+        self.syncronous_ctrl_transfer(data)
+
     def init_base(self):
         self.set_frequency()
 
-        data = [0x01, 0x2A, 0x21, 0x21, 0x05]
+        data = [0x01, 0x2A, 0x21, 0x41, 0x05]
         self.syncronous_ctrl_transfer(data)
         data = [0x01, 0x12]
         self.syncronous_ctrl_transfer(data)
@@ -143,6 +153,19 @@ class iClickerBase(object):
 
         data = [0x01, 0x11]
         self.syncronous_ctrl_transfer(data)
+
+    def get_responses(self):
+        responses = []
+        data = self.read_data()
+        if data is not None:
+            packet = iPacket(data)
+            packet.print_packet()
+            response1 = iClickerResponse(data[:32])
+            response1.parse_alpha_response()
+            response2 = iClickerResponse(data[32:64])
+            response2.parse_alpha_response()
+            responses = [response1, response2]
+        return responses
 
     def show_responses(self):
         show = 0
@@ -193,13 +216,36 @@ class iClickerResponse(object):
         print "Clicker Response: %s" % self.response
         print "Clicker Response Num: %d" % self.response_num
 
+class iClickerPoll(object):
+
+    def __init__(self):
+        self.iClickerBase = None
+        self.iClickerResponses = []
+        self.isPolling = False
+
+    def start_poll(self):
+        if self.iClickerBase is None:
+            self.iClickerBase = iClickerBase()
+            self.iClickerBase.get_base()
+        if self.iClickerBase.initialized is False:
+            self.iClickerBase.init_base()
+        self.iClickerBase.start_poll()
+        self.isPolling = True
+        self.poll_loop()
+
+    def poll_loop(self):
+        while self.isPolling is True:
+            responses = self.iClickerBase.get_responses()
+            for response in responses:
+                response.print_response()
+                self.iClickerResponses.append(response)
+            if len(self.iClickerResponses) > 10:
+                self.end_poll()
+
+    def end_poll(self):
+        self.isPolling = False
+
+
 if __name__ == '__main__':
-    packet = iPacket([0x01, 0x83])
-    packet.print_packet()
-
-    base = iClickerBase()
-    base.get_base()
-    base.init_base()
-    base.start_poll()
-
-    base.show_responses()
+    poll = iClickerPoll()
+    poll.start_poll()

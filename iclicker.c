@@ -124,8 +124,15 @@ void displayIClickerBaseInterruptIn(iClickerBase* iBase)
   int i;
   for(i = 0; i<64; i++){data[i] = 0;}
   int len;
-  int tries = libusb_interrupt_transfer(iBase->base, 0x83, data, 64, &len, 2000);
-  if(tries) printUSBPacket(data, len);
+  int tries = libusb_interrupt_transfer(iBase->base, 0x83, data, 64, &len, 1000);
+  if(tries)
+    {
+      printUSBPacket(data, len);
+    }
+  else
+  {
+    printf("no data\n");
+  }
   free(data);
 }
 
@@ -138,6 +145,7 @@ void sendIClickerBaseControlTransfer(iClickerBase *iBase, char* commandstring, i
     // sends the command to the base
     libusb_control_transfer(iBase->base,0x21,0x09,0x0200,0x0000,paddedcommand,64,1000);
     free(paddedcommand);
+    usleep(100000);
     displayIClickerBaseInterruptIn(iBase);
   }
 }
@@ -197,11 +205,11 @@ void setIClickerBaseVersion2(iClickerBase* iBase)
 {
   if(iBase->base != NULL && !iBase->isPolling)
   {
-  char* command = (char*)malloc(2*sizeof(char));
-  command[0] = 0x01;
-  command[1] = 0x2d;
-  sendIClickerBaseControlTransfer(iBase, command, 2);
-  free(command);
+    char* command = (char*)malloc(2*sizeof(char));
+    command[0] = 0x01;
+    command[1] = 0x2d;
+    sendIClickerBaseControlTransfer(iBase, command, 2);
+    free(command);
   }
 }
 
@@ -213,8 +221,8 @@ void setIClicketBasePollType(iClickerBase* iBase, iPollType type)
   command[0] = 0x01;
   command[1] = 0x19;
   command[2] = 0x66 + type;
-  command[3] = 0x00;
-  command[4] = 0x00;
+  command[3] = 0x0a;
+  command[4] = 0x01;
   sendIClickerBaseControlTransfer(iBase, command, 5);
   free(command);
   }
@@ -262,6 +270,7 @@ void initIClickerBase(iClickerBase* iBase)
     command[1] = 0x16;
     sendIClickerBaseControlTransfer(iBase, command, 2);
 
+    free(command);
 
     iBase->initialized = 1;
   }
@@ -282,6 +291,8 @@ void startIClickerBasePoll(iClickerBase* iBase)
     setIClicketBasePollType(iBase, 0);
     command[1] = 0x11;
     sendIClickerBaseControlTransfer(iBase, command, 2);
+
+    free(command);
   }
 }
 
@@ -386,12 +397,6 @@ int main()
   iClickerBase* iBase = getIClickerBase();
 
   initIClickerBase(iBase);
-  setIClickerBaseFrequency(iBase, 'c', 'd');
-  displayIClickerBaseInterruptIn(iBase);
-
-  setIClickerBaseDisplay(iBase, "Now Polling", 11, 0);
-  displayIClickerBaseInterruptIn(iBase);
-  setIClickerBaseDisplay(iBase, "  ", 2, 1);
   startIClickerBasePoll(iBase);
   displayIClickerBaseResponse(iBase);
   stopIClickerBasePoll(iBase);
