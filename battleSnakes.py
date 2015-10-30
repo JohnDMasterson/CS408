@@ -2,6 +2,7 @@ import pygame
 import time
 import random
 
+pygame.font.init()
 pygame.init() 
 
 white = (255, 255, 255)
@@ -18,6 +19,7 @@ pygame.display.set_caption('Battle Snakes')
 
 pygame.display.update()
 
+
 FPS = 10
 
 clock = pygame.time.Clock()
@@ -30,6 +32,7 @@ winner = 0
 
 snakeHead1 = pygame.image.load('snakeHead1.png')
 apple = pygame.image.load('apple.png')
+apple2 = pygame.image.load('apple2.png')
 
 direction1 = "left"
 direction2 = "right"
@@ -52,8 +55,8 @@ def snake1(snakelist1, block_size):
 	if direction1 == "down":
                 head1 = pygame.transform.rotate(snakeHead1, 180)
 	'''
-	#gameDisplay.blit(head1, (snakelist1[-1][0], snakelist1[-1][1]))
-	#for XnY in snakelist1[:-1]:
+	gameDisplay.blit(head1, (snakelist1[-1][0], snakelist1[-1][1]))
+	for XnY in snakelist1[:-1]:
 	for XnY in snakelist1:
 		pygame.draw.rect(gameDisplay, green, [XnY[0], XnY[1], block_size, block_size])	
 
@@ -70,8 +73,8 @@ def message_to_screen(msg, color, y = 0):
 	textSurf, textRect = text_objects(msg, color)
 	textRect.center = (display_width/2), (display_height/2)+y
 	gameDisplay.blit(textSurf, textRect)
-	#screen_text = font.render(msg, True, color)
-	#gameDisplay.blit(screen_text, [display_width/2, display_height/2])
+	screen_text = font.render(msg, True, color)
+	gameDisplay.blit(screen_text, [display_width/2, display_height/2])
 
 def game_intro():
 	intro = True
@@ -96,6 +99,7 @@ def game_intro():
 	
 		pygame.display.update()
 		clock.tick(5)
+
 
 #main game loop
 def gameLoop():
@@ -131,6 +135,11 @@ def gameLoop():
 	#random coordinates of the apple
 	randAppleX = round(random.randrange(0, display_width - block_size)/10.0)*10.0
 	randAppleY = round(random.randrange(0, display_height - block_size)/10.0)*10.0
+
+	#random coordinates of apple 2
+	randApple2X = round(random.randrange(0, display_width - block_size)/10.0)*10.0
+	randApple2Y = round(random.randrange(0, display_height - block_size)/10.0)*10.0
+	
 	while not gameExit:
 		global winner
 		while gameOver == True:
@@ -228,9 +237,10 @@ def gameLoop():
 		gameDisplay.fill(white)
 		
 		#draw random apple
-		#pygame.draw.rect(gameDisplay, red, [randAppleX, randAppleY, block_size, block_size])
+		#pygame.draw.rect(gameDisplay, green, [randApple2X, randApple2Y, block_size, block_size])
 		gameDisplay.blit(apple, (randAppleX, randAppleY))
-
+		
+		gameDisplay.blit(apple2, (randApple2X,randApple2Y))
 		#update lists
 		snakehead1 = []
 		snakehead1.append(lead_x1)
@@ -246,9 +256,11 @@ def gameLoop():
 		
 		#remove last element from list
 		if len(snakelist1) > snakelength1:
-			del snakelist1[0]
+			for i in range(0,len(snakelist1) - snakelength1):
+				del snakelist1[i]
 		if len(snakelist2) > snakelength2:
-                        del snakelist2[0]
+			for i in range(0,len(snakelist2) - snakelength2):
+                                del snakelist2[i]
 	
 		#head-on collision
 		if snakehead2 == snakehead1:
@@ -281,7 +293,7 @@ def gameLoop():
 		snake1(snakelist1, block_size)
 		snake2(snakelist2, block_size)
 		
-		score(snakelength1 - 1, snakelength2 - 1)
+		#score(snakelength1 - 1, snakelength2 - 1)
 	
 		pygame.display.update()
 		
@@ -294,11 +306,24 @@ def gameLoop():
                         randAppleX = round(random.randrange(0, display_width - block_size)/10.0)*10.0
                         randAppleY = round(random.randrange(0, display_height - block_size)/10.0)*10.0
 			snakelength2 += 1
+		if lead_x1 == randApple2X and lead_y1 == randApple2Y:
+                        randApple2X = round(random.randrange(0, display_width - block_size)/10.0)*10.0
+                        randApple2Y = round(random.randrange(0, display_height - block_size)/10.0)*10.0
+                        snakelength1 = snakelength1 - 1
+			gameOver = True
+			winner = 2
+			
+		elif lead_x2 == randApple2X and lead_y2 == randApple2Y:
+                        randApple2X = round(random.randrange(0, display_width - block_size)/10.0)*10.0
+                        randApple2Y = round(random.randrange(0, display_height - block_size)/10.0)*10.0
+                        snakelength2 = snakelength2 - 1
+			gameOver = True
+			winner = 1
 
 		clock.tick(FPS)
 	
 	pygame.quit()
 	quit()
 
-game_intro()
+
 gameLoop()
