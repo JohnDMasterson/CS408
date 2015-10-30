@@ -191,11 +191,21 @@ class iClickerResponse(object):
         self.response_num = None
 
     def parse_alpha_response(self):
-        length = len(self.data)
-        if length < 32:
-            return
-        self.response = self.data[2] - 0x81 + 65
-        self.get_id_from_response()
+        if self.is_valid_response():
+            self.response = self.data[2] - 0x81 + 65
+            self.get_id_from_alpha_response()
+        else:
+            self.response = -1
+            self.clicker_id = -1
+            self.response_num = -1
+
+    def get_id_from_alpha_response(self):
+        self.response_num = self.data[6]
+        clicker_seq = self.data[3 : 6]
+        clicker_check = clicker_seq[0] ^ clicker_seq[1] ^ clicker_seq[2]
+        clicker_seq.append(clicker_check)
+        clicker_id = ''.join("%02X" % b for b in clicker_seq)
+        self.clicker_id = clicker_id
 
     def get_id_from_response(self):
         for i in range(31, 0, -1):
@@ -216,11 +226,15 @@ class iClickerResponse(object):
         print "Clicker Response: %s" % self.response
         print "Clicker Response Num: %d" % self.response_num
 
+    def is_valid_response(self):
+        return self.data[0] == 0x02 and self.data[1] == 0x13 and len(self.data) == 32
+
 class iClickerPoll(object):
 
     def __init__(self):
         self.iClickerBase = None
-        self.iClickerResponses = []
+        self.iClickerResponses = defaultdict(list)
+        self.last_response_num = 0
         self.isPolling = False
 
     def start_poll(self):
@@ -238,13 +252,21 @@ class iClickerPoll(object):
             responses = self.iClickerBase.get_responses()
             for response in responses:
                 response.print_response()
-                self.iClickerResponses.append(response)
+                self.add_response(response)
             if len(self.iClickerResponses) > 10:
                 self.end_poll()
 
     def end_poll(self):
         self.isPolling = False
 
+    def add_response(self, response):
+        if response.response_num > self.last_response_num:
+            self.iClickerResponses[response.clicker_id].append(response)
+            last_response_num = response.response_num
+        elif    self.last_response_num == 255 and response.response_num == 1:
+            self.iClickerResponses[response.clicker_id].append(response)
+            last_response_num = response.response_num
+        print len(self.iClickerResponses)
 
 if __name__ == '__main__':
     poll = iClickerPoll()
