@@ -119,7 +119,9 @@ class Board:
 		return [(num - 1)%self.num_hor_blocks, int(math.floor((num - 1) /self.num_hor_blocks))]
 
         def random_empty_block(self):
-                return self.int_to_point(random.choice(self.empty_blocks))
+                point = self.int_to_point(random.choice(self.empty_blocks))
+		self.make_block_occupied(point[0], point[1])
+		return point
 
         def point_to_int(self, x, y):
                 return (x+1)+(y*self.num_hor_blocks)
@@ -133,8 +135,16 @@ class Board:
                 pos = self.point_to_int(x, y)
                 if pos in self.empty_blocks:
                         self.empty_blocks.remove(pos)
+class Apple:
+	def __init__(self, xPos, yPos, image, effect):
+		self.pos = [xPos, yPos]
+		self.image = image
+		self.effect = effect
 
 class GameInput:
 	def __init__(self, key, count):
 		self.key = key
 		self.count = count
+
+	def random_input(self):
+		self.key = random.choice(['u', 'd', 'l', 'r'])

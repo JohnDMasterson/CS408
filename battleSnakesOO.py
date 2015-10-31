@@ -1,18 +1,19 @@
 try:
 	import pygame
 except ImportError:
-	print "Dang! An error occured while importing pygame. See http://pygame.org/wiki/GettingStarted for installation instructions"
+	print "Hissss! An error occured while importing pygame. See http://pygame.org/wiki/GettingStarted for installation instructions"
 	quit()
 import time
 import snake_module
 
+current_milli_time = lambda: int(round(time.time() * 1000))
 pygame.init()
 
 white = (255, 255, 255)
 black = (0,0,0)
 grey = (125, 125, 125)
 red = (255,0,0)
-green = (0,255,0)
+green = (0,150,0)
 blue = (0,0,255)
 beige = (240, 240, 190)
 
@@ -29,21 +30,28 @@ block_size = 20
 font = pygame.font.SysFont(None, 30)
 second_font = pygame.font.SysFont(None, 22)
 score_font = pygame.font.SysFont(None, 25)
-apple = pygame.image.load('apple.png')
+
 text_board = pygame.image.load('text_board.png')
-apple = pygame.transform.scale(apple, (block_size, block_size))
 
 board = snake_module.Board(display_width, display_height, block_size)
 start_pos = board.random_empty_block()
 snakeA = snake_module.Snake(board, 1, green, "Green", start_pos)
 start_pos = board.random_empty_block()
-snakeB = snake_module.Snake(board, 2, red, "Red", start_pos)
+snakeB = snake_module.Snake(board, 2, blue, "Blue", start_pos)
 winner = None
 gameExit = False
 gameOver = False
 game_over_shown = False
-apple_pos = board.random_empty_block()
 
+image1 = pygame.transform.scale(pygame.image.load('apple.png'), (block_size, block_size))
+image2 = pygame.transform.scale(pygame.image.load('apple2.png'), (block_size, block_size))
+
+appleA = snake_module.Apple(0, 0, image1, 1)
+appleB = snake_module.Apple(0, 0, image2, -1)
+
+appleA.pos = board.random_empty_block()
+appleB.pos = board.random_empty_block()
+apples = [appleA, appleB]
 
 #function for printing message when game over
 def message_to_screen(msg_title, color, msg_text=None):
@@ -74,9 +82,9 @@ def print_snake(snake):
 	if snake.direction == 'd':
 		eyes = pygame.transform.rotate(eyes, 180)
 	elif snake.direction == 'l':
-		eyes = pygame.transform.rotate(eyes, -90)
-	elif snake.direction == 'r':
 		eyes = pygame.transform.rotate(eyes, 90)
+	elif snake.direction == 'r':
+		eyes = pygame.transform.rotate(eyes, -90)
 	board = snake.board
 	gameDisplay.blit(eyes, (board.margin+board.block_size*XnY[0], board.margin+board.block_size*XnY[1]))
 
@@ -84,7 +92,10 @@ def print_snake(snake):
 def game_over(winner_snake, game_input=None):
 	global game_over_shown 
 	if not game_over_shown:
-		message_to_screen("Game Over!", black, winner_snake.snake_name+" snake wins. Press 'A' to play again or 'B' to quit")
+		if winner_snake is None:
+			message_to_screen("Game Over!", black, "It's a tie! Press 'A' to play again or 'B' to quit")
+		else:
+			message_to_screen("Game Over!", black, winner_snake.snake_name+" snake wins. Press 'A' to play again or 'B' to quit")
 		game_over_shown = True
 
 
@@ -112,15 +123,15 @@ def draw_game():
 	score(snakeA.length - 1, snakeB.length - 1)
 	print_snake(snakeA)
 	print_snake(snakeB)
-	gameDisplay.blit(apple, (board.block_size*apple_pos[0]+board.margin, board.block_size*apple_pos[1]+board.margin))
-
+	gameDisplay.blit(appleA.image, (board.block_size*appleA.pos[0]+board.margin, board.block_size*appleA.pos[1]+board.margin))
+	gameDisplay.blit(appleB.image, (board.block_size*appleB.pos[0]+board.margin, board.block_size*appleB.pos[1]+board.margin))
 
 #game_input is a two element list.
 #the first is the input from the first team
 #the second is the input from the second
 #note that the elements of the list are GameInput objects
 def gameloop(game_input):
-	global gameOver, gameExit, winner, apple_pos
+	global gameOver, gameExit, winner, appleA, appleB
 
 	if not gameExit:
 		if gameOver:
@@ -141,24 +152,28 @@ def gameloop(game_input):
 				print "Collision"
 				gameOver = True
 				game_over(winner)
+				return
 			#check if snakes are out of bounds
 			elif snakeA.out_of_bounds() and snakeB.out_of_bounds():
 				winner = edge_case_winner(snakeA, snakeB)
 				print "Out of Bounds"
 				gameOver = True
 				game_over(winner)
+				return
 			elif snakeA.out_of_bounds():
 				winner = snakeB
 				print "Out of BoundA"
 				gameOver = True
 				game_over(winner)
+				return
 			elif snakeB.out_of_bounds():
 				winner = snakeA
 				print "Out of Bounds B"
 				gameOver = True
 				game_over(winner)
+				return
 			#check for collision (self collision is also collision)
-			elif snakeA.collided(snakeB) or snakeB.collided(snakeA):
+			if snakeA.collided(snakeB) or snakeB.collided(snakeA):
 				if snakeA.collided(snakeB) and snakeB.collided(snakeA):
 					winner = edge_case_winner(snakeA, snakeB)
 				elif snakeA.collided(snakeB):
@@ -168,16 +183,24 @@ def gameloop(game_input):
 				print "Collided"	
 				gameOver = True
 				game_over(winner)
-			#check if apple got eaten
-			elif snakeA.head == apple_pos:
-				snakeA.increase_length()
-				board.make_block_empty(apple_pos[0], apple_pos[1])
-				#create new apple
-				apple_pos = board.random_empty_block()
-			elif snakeB.head == apple_pos:
-				snakeB.increase_length()
-				board.make_block_empty(apple_pos[0], apple_pos[1])
-				apple_pos = board.random_empty_block()
+				return
+			#check if apples got eaten
+			for apple in apples:
+				if snakeA.head == apple.pos:
+					if apple.effect is 1:
+						snakeA.increase_length()
+					elif apple.effect is -1:
+						snakeA.decrease_length()
+					board.make_block_empty(apple.pos[0], apple.pos[1])
+					#create new apple
+					apple.pos = board.random_empty_block()
+				elif snakeB.head == apple.pos:
+					if apple.effect is 1:
+                                                snakeB.increase_length()
+                                        elif apple.effect is -1:
+                                                snakeB.decrease_length()
+					board.make_block_empty(apple.pos[0], apple.pos[1])
+					apple.pos = board.random_empty_block()
 			#draw all the stuff
 			if not gameOver:
 				draw_game()
@@ -185,13 +208,46 @@ def gameloop(game_input):
 		pygame.quit()
 		quit()
 
+def next_frame_time():
+	global last_frame_time
+
+	diff = 1000.0/FPS
+	if current_milli_time() - last_frame_time >= diff:
+		last_frame_time = current_milli_time()
+		return True
+	else:
+		return False
+
+def clamp(min_num, max_num, num):
+	if num < min_num:
+		return min_num
+	elif num > max_num:
+		return max_num
+	else:
+		return num
+
+def update_time_bar():
+	ratio = clamp(0, 1, FPS*(current_milli_time() - last_frame_time)/1000.0)
+	color_change = int(255*ratio)
+	color = (0+color_change, 255-color_change, 0)
+	pygame.draw.rect(gameDisplay, color, [2*board.margin + 15 + board.width, board.margin + board.height/2 - 15, panel_width - 30, 20], 2)
+	pygame.draw.rect(gameDisplay, grey, [2*board.margin + 15 + board.width + 4, board.margin + board.height/2 - 15 + 4, (1 - ratio) * (panel_width - 38), 13])
+
+def clear_panel():
+	pygame.draw.rect(gameDisplay, white, [display_width, 0, panel_width, display_height])
+
 inputs = [snake_module.GameInput('u', 5), snake_module.GameInput('d', 5)]
 test = True
 gameDisplay.fill(white)
+last_frame_time = current_milli_time()
 draw_game()
+pygame.display.update()
 
 while test:
-	#gameDisplay.fill(white)
-	gameloop(inputs)
+	clear_panel()
+	update_time_bar()
+	if next_frame_time():
+		gameloop(inputs)
 	pygame.display.update()
-	clock.tick(FPS)
+	inputs[0].random_input()
+	inputs[1].random_input()
