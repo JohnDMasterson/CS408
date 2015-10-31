@@ -1,0 +1,1276 @@
+No.     Time           Source                Destination           Protocol Length Info
+      1 0.000000000    host                  19.0                  USB      64     GET DESCRIPTOR Request DEVICE
+
+Frame 1: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff8801f947bb40
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x80, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: relevant (0)
+    Data: not present ('<')
+    URB sec: 1446183406
+    URB usec: 374738
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 40
+    Data length [bytes]: 0
+    [Response in: 2]
+URB setup
+    bmRequestType: 0x80
+        1... .... = Direction: Device-to-host
+        .00. .... = Type: Standard (0x00)
+        ...0 0000 = Recipient: Device (0x00)
+    bRequest: GET DESCRIPTOR (6)
+    Descriptor Index: 0x00
+    bDescriptorType: DEVICE (1)
+    Language Id: no language specified (0x0000)
+    wLength: 40
+
+No.     Time           Source                Destination           Protocol Length Info
+      2 0.000731000    19.0                  host                  USB      82     GET DESCRIPTOR Response DEVICE
+
+Frame 2: 82 bytes on wire (656 bits), 82 bytes captured (656 bits) on interface 0
+USB URB
+    URB id: 0xffff8801f947bb40
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x80, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183406
+    URB usec: 375469
+    URB status: Success (0)
+    URB length [bytes]: 18
+    Data length [bytes]: 18
+    [Request in: 1]
+    [Time from request: 0.000731000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+DEVICE DESCRIPTOR
+
+No.     Time           Source                Destination           Protocol Length Info
+      3 0.000774000    host                  18.0                  USB      64     GET DESCRIPTOR Request DEVICE
+
+Frame 3: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff8801f947bb40
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x80, Direction: IN
+    Device: 18
+    URB bus id: 1
+    Device setup request: relevant (0)
+    Data: not present ('<')
+    URB sec: 1446183406
+    URB usec: 375512
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 40
+    Data length [bytes]: 0
+    [Response in: 4]
+URB setup
+    bmRequestType: 0x80
+        1... .... = Direction: Device-to-host
+        .00. .... = Type: Standard (0x00)
+        ...0 0000 = Recipient: Device (0x00)
+    bRequest: GET DESCRIPTOR (6)
+    Descriptor Index: 0x00
+    bDescriptorType: DEVICE (1)
+    Language Id: no language specified (0x0000)
+    wLength: 40
+
+No.     Time           Source                Destination           Protocol Length Info
+      4 0.000826000    18.0                  host                  USB      82     GET DESCRIPTOR Response DEVICE
+
+Frame 4: 82 bytes on wire (656 bits), 82 bytes captured (656 bits) on interface 0
+USB URB
+    URB id: 0xffff8801f947bb40
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x80, Direction: IN
+    Device: 18
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183406
+    URB usec: 375564
+    URB status: Success (0)
+    URB length [bytes]: 18
+    Data length [bytes]: 18
+    [Request in: 3]
+    [Time from request: 0.000052000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+DEVICE DESCRIPTOR
+
+No.     Time           Source                Destination           Protocol Length Info
+      5 0.000845000    host                  1.0                   USB      64     GET DESCRIPTOR Request DEVICE
+
+Frame 5: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff8801f947bb40
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x80, Direction: IN
+    Device: 1
+    URB bus id: 1
+    Device setup request: relevant (0)
+    Data: not present ('<')
+    URB sec: 1446183406
+    URB usec: 375583
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 40
+    Data length [bytes]: 0
+    [Response in: 6]
+URB setup
+    bmRequestType: 0x80
+        1... .... = Direction: Device-to-host
+        .00. .... = Type: Standard (0x00)
+        ...0 0000 = Recipient: Device (0x00)
+    bRequest: GET DESCRIPTOR (6)
+    Descriptor Index: 0x00
+    bDescriptorType: DEVICE (1)
+    Language Id: no language specified (0x0000)
+    wLength: 40
+
+No.     Time           Source                Destination           Protocol Length Info
+      6 0.000851000    1.0                   host                  USB      82     GET DESCRIPTOR Response DEVICE
+
+Frame 6: 82 bytes on wire (656 bits), 82 bytes captured (656 bits) on interface 0
+USB URB
+    URB id: 0xffff8801f947bb40
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x80, Direction: IN
+    Device: 1
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183406
+    URB usec: 375589
+    URB status: Success (0)
+    URB length [bytes]: 18
+    Data length [bytes]: 18
+    [Request in: 5]
+    [Time from request: 0.000006000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+DEVICE DESCRIPTOR
+
+No.     Time           Source                Destination           Protocol Length Info
+      7 7.583308000    host                  19.0                  USB      128    URB_CONTROL out
+
+Frame 7: 128 bytes on wire (1024 bits), 128 bytes captured (1024 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: relevant (0)
+    Data: present (0)
+    URB sec: 1446183413
+    URB usec: 958046
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 64
+    [Response in: 8]
+    [bInterfaceClass: Unknown (0xffff)]
+URB setup
+    bmRequestType: 0x21
+        0... .... = Direction: Host-to-device
+        .01. .... = Type: Class (0x01)
+        ...0 0001 = Recipient: Interface (0x01)
+    bRequest: 9
+    wValue: 0x0200
+    wIndex: 0
+    wLength: 64
+Leftover Capture Data: 011023440000000000000000000000000000000000000000...
+
+No.     Time           Source                Destination           Protocol Length Info
+      8 7.584493000    19.0                  host                  USB      64     URB_CONTROL out
+
+Frame 8: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('>')
+    URB sec: 1446183413
+    URB usec: 959231
+    URB status: Success (0)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Request in: 7]
+    [Time from request: 0.001185000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+      9 7.584567000    host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 9: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183413
+    URB usec: 959305
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 10]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     10 7.586933000    19.3                  host                  USB      128    URB_INTERRUPT in
+
+Frame 10: 128 bytes on wire (1024 bits), 128 bytes captured (1024 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183413
+    URB usec: 961671
+    URB status: Success (0)
+    URB length [bytes]: 64
+    Data length [bytes]: 64
+    [Request in: 9]
+    [Time from request: 0.002366000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+Leftover Capture Data: 0110aa000000000000000000000000000000000000000000...
+
+No.     Time           Source                Destination           Protocol Length Info
+     11 7.587008000    host                  19.0                  USB      128    URB_CONTROL out
+
+Frame 11: 128 bytes on wire (1024 bits), 128 bytes captured (1024 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: relevant (0)
+    Data: present (0)
+    URB sec: 1446183413
+    URB usec: 961746
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 64
+    [Response in: 12]
+    [bInterfaceClass: Unknown (0xffff)]
+URB setup
+    bmRequestType: 0x21
+        0... .... = Direction: Host-to-device
+        .01. .... = Type: Class (0x01)
+        ...0 0001 = Recipient: Interface (0x01)
+    bRequest: 9
+    wValue: 0x0200
+    wIndex: 0
+    wLength: 64
+Leftover Capture Data: 011600000000000000000000000000000000000000000000...
+
+No.     Time           Source                Destination           Protocol Length Info
+     12 7.588177000    19.0                  host                  USB      64     URB_CONTROL out
+
+Frame 12: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('>')
+    URB sec: 1446183413
+    URB usec: 962915
+    URB status: Success (0)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Request in: 11]
+    [Time from request: 0.001169000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     13 7.588242000    host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 13: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183413
+    URB usec: 962980
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 14]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     14 7.591931000    19.3                  host                  USB      128    URB_INTERRUPT in
+
+Frame 14: 128 bytes on wire (1024 bits), 128 bytes captured (1024 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183413
+    URB usec: 966669
+    URB status: Success (0)
+    URB length [bytes]: 64
+    Data length [bytes]: 64
+    [Request in: 13]
+    [Time from request: 0.003689000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+Leftover Capture Data: 0116aa000000000000000000000000000000000000000000...
+
+No.     Time           Source                Destination           Protocol Length Info
+     15 7.592014000    host                  19.0                  USB      128    URB_CONTROL out
+
+Frame 15: 128 bytes on wire (1024 bits), 128 bytes captured (1024 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: relevant (0)
+    Data: present (0)
+    URB sec: 1446183413
+    URB usec: 966752
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 64
+    [Response in: 16]
+    [bInterfaceClass: Unknown (0xffff)]
+URB setup
+    bmRequestType: 0x21
+        0... .... = Direction: Host-to-device
+        .01. .... = Type: Class (0x01)
+        ...0 0001 = Recipient: Interface (0x01)
+    bRequest: 9
+    wValue: 0x0200
+    wIndex: 0
+    wLength: 64
+Leftover Capture Data: 01134e6f7720506f6c6c696e672020202020000000000000...
+
+No.     Time           Source                Destination           Protocol Length Info
+     16 7.593179000    19.0                  host                  USB      64     URB_CONTROL out
+
+Frame 16: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('>')
+    URB sec: 1446183413
+    URB usec: 967917
+    URB status: Success (0)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Request in: 15]
+    [Time from request: 0.001165000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     17 7.593242000    host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 17: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183413
+    URB usec: 967980
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 18]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     18 9.595428000    19.3                  host                  USB      64     URB_INTERRUPT in
+
+Frame 18: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183415
+    URB usec: 970166
+    URB status: No such file or directory (-ENOENT) (-2)
+    URB length [bytes]: 0
+    Data length [bytes]: 0
+    [Request in: 17]
+    [Time from request: 2.002186000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     19 9.595595000    host                  19.0                  USB      128    URB_CONTROL out
+
+Frame 19: 128 bytes on wire (1024 bits), 128 bytes captured (1024 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: relevant (0)
+    Data: present (0)
+    URB sec: 1446183415
+    URB usec: 970333
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 64
+    [Response in: 20]
+    [bInterfaceClass: Unknown (0xffff)]
+URB setup
+    bmRequestType: 0x21
+        0... .... = Direction: Host-to-device
+        .01. .... = Type: Class (0x01)
+        ...0 0001 = Recipient: Interface (0x01)
+    bRequest: 9
+    wValue: 0x0200
+    wIndex: 0
+    wLength: 64
+Leftover Capture Data: 011420202020202020202020202020202020000000000000...
+
+No.     Time           Source                Destination           Protocol Length Info
+     20 9.596701000    19.0                  host                  USB      64     URB_CONTROL out
+
+Frame 20: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('>')
+    URB sec: 1446183415
+    URB usec: 971439
+    URB status: Success (0)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Request in: 19]
+    [Time from request: 0.001106000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     21 9.596750000    host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 21: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183415
+    URB usec: 971488
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 22]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     22 11.598913000   19.3                  host                  USB      64     URB_INTERRUPT in
+
+Frame 22: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff880131f48f00
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183417
+    URB usec: 973651
+    URB status: No such file or directory (-ENOENT) (-2)
+    URB length [bytes]: 0
+    Data length [bytes]: 0
+    [Request in: 21]
+    [Time from request: 2.002163000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     23 11.599043000   host                  19.0                  USB      128    URB_CONTROL out
+
+Frame 23: 128 bytes on wire (1024 bits), 128 bytes captured (1024 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: relevant (0)
+    Data: present (0)
+    URB sec: 1446183417
+    URB usec: 973781
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 64
+    [Response in: 24]
+    [bInterfaceClass: Unknown (0xffff)]
+URB setup
+    bmRequestType: 0x21
+        0... .... = Direction: Host-to-device
+        .01. .... = Type: Class (0x01)
+        ...0 0001 = Recipient: Interface (0x01)
+    bRequest: 9
+    wValue: 0x0200
+    wIndex: 0
+    wLength: 64
+Leftover Capture Data: 011703000000000000000000000000000000000000000000...
+
+No.     Time           Source                Destination           Protocol Length Info
+     24 11.600233000   19.0                  host                  USB      64     URB_CONTROL out
+
+Frame 24: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('>')
+    URB sec: 1446183417
+    URB usec: 974971
+    URB status: Success (0)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Request in: 23]
+    [Time from request: 0.001190000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     25 11.600290000   host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 25: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183417
+    URB usec: 975028
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 26]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     26 11.603919000   19.3                  host                  USB      128    URB_INTERRUPT in
+
+Frame 26: 128 bytes on wire (1024 bits), 128 bytes captured (1024 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183417
+    URB usec: 978657
+    URB status: Success (0)
+    URB length [bytes]: 64
+    Data length [bytes]: 64
+    [Request in: 25]
+    [Time from request: 0.003629000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+Leftover Capture Data: 0117aa000000000000000000000000000000000000000000...
+
+No.     Time           Source                Destination           Protocol Length Info
+     27 11.604010000   host                  19.0                  USB      128    URB_CONTROL out
+
+Frame 27: 128 bytes on wire (1024 bits), 128 bytes captured (1024 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: relevant (0)
+    Data: present (0)
+    URB sec: 1446183417
+    URB usec: 978748
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 64
+    [Response in: 28]
+    [bInterfaceClass: Unknown (0xffff)]
+URB setup
+    bmRequestType: 0x21
+        0... .... = Direction: Host-to-device
+        .01. .... = Type: Class (0x01)
+        ...0 0001 = Recipient: Interface (0x01)
+    bRequest: 9
+    wValue: 0x0200
+    wIndex: 0
+    wLength: 64
+Leftover Capture Data: 011705000000000000000000000000000000000000000000...
+
+No.     Time           Source                Destination           Protocol Length Info
+     28 11.605179000   19.0                  host                  USB      64     URB_CONTROL out
+
+Frame 28: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('>')
+    URB sec: 1446183417
+    URB usec: 979917
+    URB status: Success (0)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Request in: 27]
+    [Time from request: 0.001169000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     29 11.605275000   host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 29: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183417
+    URB usec: 980013
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 30]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     30 11.622926000   19.3                  host                  USB      128    URB_INTERRUPT in
+
+Frame 30: 128 bytes on wire (1024 bits), 128 bytes captured (1024 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183417
+    URB usec: 997664
+    URB status: Success (0)
+    URB length [bytes]: 64
+    Data length [bytes]: 64
+    [Request in: 29]
+    [Time from request: 0.017651000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+Leftover Capture Data: 0117aa000000000000000000000000000000000000000000...
+
+No.     Time           Source                Destination           Protocol Length Info
+     31 11.623021000   host                  19.0                  USB      128    URB_CONTROL out
+
+Frame 31: 128 bytes on wire (1024 bits), 128 bytes captured (1024 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: relevant (0)
+    Data: present (0)
+    URB sec: 1446183417
+    URB usec: 997759
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 64
+    [Response in: 32]
+    [bInterfaceClass: Unknown (0xffff)]
+URB setup
+    bmRequestType: 0x21
+        0... .... = Direction: Host-to-device
+        .01. .... = Type: Class (0x01)
+        ...0 0001 = Recipient: Interface (0x01)
+    bRequest: 9
+    wValue: 0x0200
+    wIndex: 0
+    wLength: 64
+Leftover Capture Data: 011966000000000000000000000000000000000000000000...
+
+No.     Time           Source                Destination           Protocol Length Info
+     32 11.624214000   19.0                  host                  USB      64     URB_CONTROL out
+
+Frame 32: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('>')
+    URB sec: 1446183417
+    URB usec: 998952
+    URB status: Success (0)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Request in: 31]
+    [Time from request: 0.001193000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     33 11.624296000   host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 33: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183417
+    URB usec: 999034
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 34]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     34 11.639932000   19.3                  host                  USB      128    URB_INTERRUPT in
+
+Frame 34: 128 bytes on wire (1024 bits), 128 bytes captured (1024 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183418
+    URB usec: 14670
+    URB status: Success (0)
+    URB length [bytes]: 64
+    Data length [bytes]: 64
+    [Request in: 33]
+    [Time from request: 0.015636000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+Leftover Capture Data: 0119aa000000000000000000000000000000000000000000...
+
+No.     Time           Source                Destination           Protocol Length Info
+     35 11.640022000   host                  19.0                  USB      128    URB_CONTROL out
+
+Frame 35: 128 bytes on wire (1024 bits), 128 bytes captured (1024 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: relevant (0)
+    Data: present (0)
+    URB sec: 1446183418
+    URB usec: 14760
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 64
+    [Response in: 36]
+    [bInterfaceClass: Unknown (0xffff)]
+URB setup
+    bmRequestType: 0x21
+        0... .... = Direction: Host-to-device
+        .01. .... = Type: Class (0x01)
+        ...0 0001 = Recipient: Interface (0x01)
+    bRequest: 9
+    wValue: 0x0200
+    wIndex: 0
+    wLength: 64
+Leftover Capture Data: 011100000000000000000000000000000000000000000000...
+
+No.     Time           Source                Destination           Protocol Length Info
+     36 11.641224000   19.0                  host                  USB      64     URB_CONTROL out
+
+Frame 36: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_CONTROL (0x02)
+    Endpoint: 0x00, Direction: OUT
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('>')
+    URB sec: 1446183418
+    URB usec: 15962
+    URB status: Success (0)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Request in: 35]
+    [Time from request: 0.001202000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     37 11.641305000   host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 37: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183418
+    URB usec: 16043
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 38]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     38 11.645937000   19.3                  host                  USB      128    URB_INTERRUPT in
+
+Frame 38: 128 bytes on wire (1024 bits), 128 bytes captured (1024 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183418
+    URB usec: 20675
+    URB status: Success (0)
+    URB length [bytes]: 64
+    Data length [bytes]: 64
+    [Request in: 37]
+    [Time from request: 0.004632000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+Leftover Capture Data: 0111aa000000000000000000000000000000000000000000...
+
+No.     Time           Source                Destination           Protocol Length Info
+     39 11.646019000   host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 39: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183418
+    URB usec: 20757
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 40]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     40 12.648309000   19.3                  host                  USB      64     URB_INTERRUPT in
+
+Frame 40: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183419
+    URB usec: 23047
+    URB status: No such file or directory (-ENOENT) (-2)
+    URB length [bytes]: 0
+    Data length [bytes]: 0
+    [Request in: 39]
+    [Time from request: 1.002290000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     41 12.648434000   host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 41: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183419
+    URB usec: 23172
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 42]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     42 13.650675000   19.3                  host                  USB      64     URB_INTERRUPT in
+
+Frame 42: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183420
+    URB usec: 25413
+    URB status: No such file or directory (-ENOENT) (-2)
+    URB length [bytes]: 0
+    Data length [bytes]: 0
+    [Request in: 41]
+    [Time from request: 1.002241000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     43 13.650792000   host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 43: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183420
+    URB usec: 25530
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 44]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     44 14.652920000   19.3                  host                  USB      64     URB_INTERRUPT in
+
+Frame 44: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183421
+    URB usec: 27658
+    URB status: No such file or directory (-ENOENT) (-2)
+    URB length [bytes]: 0
+    Data length [bytes]: 0
+    [Request in: 43]
+    [Time from request: 1.002128000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     45 14.653037000   host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 45: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183421
+    URB usec: 27775
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 46]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     46 15.655288000   19.3                  host                  USB      64     URB_INTERRUPT in
+
+Frame 46: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183422
+    URB usec: 30026
+    URB status: No such file or directory (-ENOENT) (-2)
+    URB length [bytes]: 0
+    Data length [bytes]: 0
+    [Request in: 45]
+    [Time from request: 1.002251000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     47 15.655405000   host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 47: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183422
+    URB usec: 30143
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 48]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     48 16.657657000   19.3                  host                  USB      64     URB_INTERRUPT in
+
+Frame 48: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183423
+    URB usec: 32395
+    URB status: No such file or directory (-ENOENT) (-2)
+    URB length [bytes]: 0
+    Data length [bytes]: 0
+    [Request in: 47]
+    [Time from request: 1.002252000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     49 16.657777000   host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 49: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183423
+    URB usec: 32515
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 50]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     50 17.659900000   19.3                  host                  USB      64     URB_INTERRUPT in
+
+Frame 50: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff88022303d300
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183424
+    URB usec: 34638
+    URB status: No such file or directory (-ENOENT) (-2)
+    URB length [bytes]: 0
+    Data length [bytes]: 0
+    [Request in: 49]
+    [Time from request: 1.002123000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     51 17.660062000   host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 51: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff880208fd83c0
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183424
+    URB usec: 34800
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 52]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     52 18.662269000   19.3                  host                  USB      64     URB_INTERRUPT in
+
+Frame 52: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff880208fd83c0
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183425
+    URB usec: 37007
+    URB status: No such file or directory (-ENOENT) (-2)
+    URB length [bytes]: 0
+    Data length [bytes]: 0
+    [Request in: 51]
+    [Time from request: 1.002207000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     53 18.662385000   host                  19.3                  USB      64     URB_INTERRUPT in
+
+Frame 53: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff880208fd83c0
+    URB type: URB_SUBMIT ('S')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: not present ('<')
+    URB sec: 1446183425
+    URB usec: 37123
+    URB status: Operation now in progress (-EINPROGRESS) (-115)
+    URB length [bytes]: 64
+    Data length [bytes]: 0
+    [Response in: 54]
+    [bInterfaceClass: Unknown (0xffff)]
+
+No.     Time           Source                Destination           Protocol Length Info
+     54 19.216323000   19.3                  host                  USB      64     URB_INTERRUPT in
+
+Frame 54: 64 bytes on wire (512 bits), 64 bytes captured (512 bits) on interface 0
+USB URB
+    URB id: 0xffff880208fd83c0
+    URB type: URB_COMPLETE ('C')
+    URB transfer type: URB_INTERRUPT (0x01)
+    Endpoint: 0x83, Direction: IN
+    Device: 19
+    URB bus id: 1
+    Device setup request: not relevant ('-')
+    Data: present (0)
+    URB sec: 1446183425
+    URB usec: 591061
+    URB status: Cannot send after transport endpoint shutdown (-ESHUTDOWN) (-108)
+    URB length [bytes]: 0
+    Data length [bytes]: 0
+    [Request in: 53]
+    [Time from request: 0.553938000 seconds]
+    [bInterfaceClass: Unknown (0xffff)]

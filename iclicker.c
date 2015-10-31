@@ -7,7 +7,7 @@
 #include <time.h>
 
 #include "libusb.h"
-
+int shouldRead = 1;
 void printUSBPacket(unsigned char* data, int length)
 {
   int i;
@@ -125,7 +125,8 @@ void displayIClickerBaseInterruptIn(iClickerBase* iBase)
   for(i = 0; i<64; i++){data[i] = 0;}
   int len;
   int tries = libusb_interrupt_transfer(iBase->base, 0x83, data, 64, &len, 1000);
-  if(tries) printUSBPacket(data, len);
+  //if(tries) 
+  printUSBPacket(data, len);
   free(data);
 }
 
@@ -138,7 +139,8 @@ void sendIClickerBaseControlTransfer(iClickerBase *iBase, char* commandstring, i
     // sends the command to the base
     libusb_control_transfer(iBase->base,0x21,0x09,0x0200,0x0000,paddedcommand,64,1000);
     free(paddedcommand);
-    displayIClickerBaseInterruptIn(iBase);
+    if(shouldRead)
+      displayIClickerBaseInterruptIn(iBase);
   }
 }
 
@@ -166,8 +168,10 @@ void setIClickerBaseDisplay(iClickerBase *iBase, char* displayString, int length
     {
       command[2+i] = 0x20;
     }
+    shouldRead = 0;
     sendIClickerBaseControlTransfer(iBase, command, 18);
     free(command);
+    shouldRead = 1;
   }
 }
 
@@ -339,7 +343,7 @@ void displayIClickerBaseResponse(iClickerBase* iBase)
     printf("%d\n",ret);
     printUSBPacket(data, len);
   };
-  printUSBPacket(data, len);
+  //printUSBPacket(data, len);
   free(data);
 }
 
@@ -387,11 +391,11 @@ int main()
 
   initIClickerBase(iBase);
   setIClickerBaseFrequency(iBase, 'c', 'd');
-  displayIClickerBaseInterruptIn(iBase);
+  //displayIClickerBaseInterruptIn(iBase);
 
-  setIClickerBaseDisplay(iBase, "Now Polling", 11, 0);
-  displayIClickerBaseInterruptIn(iBase);
-  setIClickerBaseDisplay(iBase, "  ", 2, 1);
+  //setIClickerBaseDisplay(iBase, "Now Polling", 11, 0);
+  //displayIClickerBaseInterruptIn(iBase);
+  //setIClickerBaseDisplay(iBase, "  ", 2, 1);
   startIClickerBasePoll(iBase);
   displayIClickerBaseResponse(iBase);
   stopIClickerBasePoll(iBase);
