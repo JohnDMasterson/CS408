@@ -83,8 +83,8 @@ def message_to_screen(msg, color, y = 0):
 	#gameDisplay.blit(screen_text, [display_width/2, display_height/2])
 
 def game_intro():
-	poll = iclicker.iClickerPoll()
-	poll.start_poll()
+	#poll = iclicker.iClickerPoll()
+	#poll.start_poll()
 	intro = True
 	while intro:
 		for event in pygame.event.get():
@@ -107,6 +107,7 @@ def game_intro():
 
 		pygame.display.update()
 		clock.tick(5)
+	'''
 	poll.end_poll()
 	responses = poll.get_all_responses()
 	for key in responses:
@@ -115,7 +116,7 @@ def game_intro():
 			teamGreen.append(response.clicker_id)
 		elif response.response == 66:
 			teamBlue.append(response.clicker_id)
-
+	'''
 	print teamGreen
 	print teamBlue
 
@@ -158,6 +159,9 @@ def gameLoop():
 	randApple2X = round(random.randrange(0, display_width - block_size)/10.0)*10.0
 	randApple2Y = round(random.randrange(0, display_height - block_size)/10.0)*10.0
 
+	poll = iclicker.iClickerPoll()
+	poll.start_poll()
+
 	while not gameExit:
 		global winner
 		while gameOver == True:
@@ -184,11 +188,14 @@ def gameLoop():
 					if event.key == pygame.K_p:
 						gameLoop()
 
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				gameExit = True
-				gameOver = False
-			if event.type == pygame.KEYDOWN:
+		#teamGreenClicks = poll.get
+		'''
+		#for event in pygame.event.get():
+		while(1):
+			#if event.type == pygame.QUIT:
+			#	gameExit = True
+			#	gameOver = False
+			#if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_LEFT:
 					if direction1 != "right":
 						direction1 = "left"
@@ -230,7 +237,7 @@ def gameLoop():
 						direction2 = "down"
                                         	lead_y_change2 = block_size
                                         	lead_x_change2 = 0
-
+		'''
 		#when snake goes out of bounds
 		if (lead_x1 >= display_width  or lead_x1 < 0 or lead_y1 >= display_height or lead_y1 < 0) and (lead_x2 >= display_width  or lead_x2 < 0 or lead_y2 >= display_height or lead_y2 < 0):
 			gameOver = True
