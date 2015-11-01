@@ -99,7 +99,7 @@ class iClickerBase(object):
         data = [0x01, 0x2D]
         self.syncronous_ctrl_transfer(data)
 
-    def set_frequency(self, first = 'A', second = 'A'):
+    def set_frequency(self, first = 'A', second = 'B'):
         first = self.FREQ_DICT[first]
         second = self.FREQ_DICT[second]
         self.frequency = [first, second]

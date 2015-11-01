@@ -32,6 +32,7 @@ class iclickerII:
 				if ident == str(responses[-1].response):
 					self.groups[clickerId] = group
 				group += 1
+		print self.groups
 
 	def start_poll(self):
 		if self.poll.isPolling is False:
@@ -46,7 +47,8 @@ class iclickerII:
 		return_val = len(self.groups)*[5*[0]]
 		for clickerId in self.poll.iClickerResponses:
 			responses = self.poll.iClickerResponses[clickerId]
-			return_val[self.groups[clickerId] - 1][responses[-1].response - ord('A')] += 1
+			if clickerId in self.groups:
+				return_val[self.groups[clickerId] - 1][responses[-1].response - ord('A')] += 1
 		return return_val
 
 	def current_responses(self):
@@ -73,7 +75,7 @@ class iclickerII:
 		for c in valid_chars:
 			if not freq[0] == c or freq[1] == c:
 				#TODO throw exception
-				sad = 1
+				return
 		
 		self.stop_poll()
 		#change frequency
@@ -103,10 +105,10 @@ class iclickerII:
 	def restart_poll(self):
 		self.poll.iClickerResponses = defaultdict(list)
 
-poll = iclickerII()
-print "Starting"
-poll.create_groups(['A','B','C','D','E'])
-time.sleep(10)
-poll.stop_grouping()
-poll.set_frequency("AD")
-print poll.groups
+#poll = iclickerII()
+#print "Starting"
+#poll.create_groups(['A','B','C','D','E'])
+#time.sleep(10)
+#poll.stop_grouping()
+#poll.set_frequency("AD")
+#print poll.groups

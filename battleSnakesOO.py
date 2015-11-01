@@ -4,7 +4,11 @@ except ImportError:
 	print "Hissss! An error occured while importing pygame. See http://pygame.org/wiki/GettingStarted for installation instructions"
 	quit()
 import time
+import iclickerII
 from snake_module import *
+
+poll = iclickerII.iclickerII()
+#poll.set_frequency("AB")
 
 current_milli_time = lambda: int(round(time.time() * 1000))
 pygame.init()
@@ -68,6 +72,16 @@ def message_to_screen(msg_title, color, msg_text=None):
 	if not msg_text is None:
 		gameDisplay.blit(screen_text2, text2_rect)
 
+def text_objects(text, color):
+        textSurface = font.render(text,True, color)
+        return textSurface, textSurface.get_rect()
+
+def old_message_to_screen(msg, color, y = 0):
+        textSurf, textRect = text_objects(msg, color)
+        textRect.center = (display_width/2), (display_height/2)+y
+        gameDisplay.blit(textSurf, textRect)
+        #screen_text = font.render(msg, True, color)
+        #gameDisplay.blit(screen_text, [display_width/2, display_height/2])
 
 def print_snake(snake):
 	board = snake.board
@@ -256,15 +270,20 @@ def clear_raw_inputs():
 def update_inputs():
 	global inputs, raw_inputs
 	index = 0
-	for keys in raw_inputs:
-		key = random.choice(['u', 'd', 'l', 'r'])
-		for k in keys:
-			if key == k.key:
-				k.count += 1
-				if k.count > inputs[index].count:
-					inputs[index] = k
-				break
-		index += 1
+	for group in poll.current_group_responses():
+		for resp in group[:4]:
+			raw_inputs[index].count = resp 
+			index += 1
+
+def game_intro():
+	gameDisplay.fill(white)
+        old_message_to_screen("Welcome to battle snakes !", green, -100)
+        old_message_to_screen("Press A to choose green snake and press B to choose blue snake !", green)
+        old_message_to_screen("A = up", green, 50)
+        old_message_to_screen("B = left", green, 100)
+        old_message_to_screen("C = down", green, 150)
+        old_message_to_screen("D = right", green, 200)
+        old_message_to_screen("press P to play", red, 250)
 
 def print_inputs():
         global inputs, raw_inputs
@@ -274,14 +293,35 @@ def print_inputs():
 			print k.count
 		print ""
 	print ""
-duration = 1.0/FPS
+duration = 10#1.0/FPS
 inputs = None
 raw_inputs = None
 clear_raw_inputs()
 gameDisplay.fill(white)
 last_frame_time = current_milli_time()
 draw_game()
+intro = True
 pygame.display.update()
+
+poll.create_groups(['A', 'B', 'C', 'D', 'E'])
+time.sleep(0.1)
+while intro:
+	game_intro()
+	for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                        quit()
+	clear_panel()
+        update_time_bar(duration)
+
+	if next_frame_time(duration):
+		intro = False
+	pygame.display.update()
+
+poll.stop_grouping()
+duration = 1.0/FPS
+gameDisplay.fill(white)
+last_frame_time = current_milli_time()
+draw_game()
 
 while True:
 	for event in pygame.event.get():
@@ -292,6 +332,7 @@ while True:
 	update_time_bar(duration)
 	if next_frame_time(duration):
 		gameloop(inputs)
+		poll.restart_poll()
 		#print_inputs()
 		clear_raw_inputs()
 		if gameOver:
