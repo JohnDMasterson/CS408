@@ -30,7 +30,51 @@ class iPacket(object):
             print "%02X " % character ,
             i = i+1
 
-class iClickerBase(object):
+class BaseAbstract(object):
+    def set_poll_type(self):
+        raise NotImplementedError()
+
+    def set_frequency(self):
+        raise NotImplementedError()
+
+    def set_base_display(self):
+        raise NotImplementedError()
+
+    def init_base(self):
+        raise NotImplementedError()
+
+    def start_poll(self):
+        raise NotImplementedError()
+
+    def get_responses(self):
+        raise NotImplementedError()
+
+    def show_responses(self):
+        raise NotImplementedError()
+
+class iClickerBaseMock(BaseAbstract):
+        def set_poll_type(self, poll_type = 'alpha'):
+            print "not setup"
+
+        def set_frequency(self, first = 'A', second = 'A'):
+            print "not setup"
+
+        def set_base_display(self, string, line):
+            print "not setup"
+
+        def init_base(self):
+            print "not setup"
+
+        def start_poll(self, poll_type = 'alpha'):
+            print "not setup"
+
+        def get_responses(self):
+            print "not setup"
+
+        def show_responses(self):
+            print "not setup"
+
+class iClickerBase(BaseAbstract):
 
     # Constants for usb stuff
     VID = 0x1881
@@ -42,7 +86,7 @@ class iClickerBase(object):
     IDX = 0x0000
 
     PACKET_LENGTH = 64
-    TIMEOUT = 100
+    TIMEOUT = 10
 
     FREQ_DICT = {'a':0,'A':0, 'b':1,'B':1, 'c':2,'C':2, 'd':3,'D':3}
 
@@ -55,10 +99,13 @@ class iClickerBase(object):
         self.usb_lock = threading.RLock()
 
     def ctrl_transfer(self, data):
-        packet = iPacket(data)
-        with self.usb_lock:
-            self.iBase.ctrl_transfer(self.BRT, self.PBR, self.VAL, self.IDX, packet.packet_data())
-        time.sleep(0.2)
+        try:
+            packet = iPacket(data)
+            with self.usb_lock:
+                self.iBase.ctrl_transfer(self.BRT, self.PBR, self.VAL, self.IDX, packet.packet_data())
+            time.sleep(0.2)
+        except:
+            time.sleep(0.2)
 
     def syncronous_ctrl_transfer(self, data):
         self.ctrl_transfer(data)
@@ -83,11 +130,14 @@ class iClickerBase(object):
 
     def get_base(self):
         with self.usb_lock:
-            backend = usb.backend.libusb1.get_backend(find_library=lambda x: "/usr/lib/libusb-1.0.so")
-            self.iBase = usb.core.find(idVendor=self.VID, idProduct=self.PID, backend=backend)
-            if self.iBase.is_kernel_driver_active(0):
-                self.iBase.detach_kernel_driver(0)
-            self.iBase.set_configuration()
+            try:
+                backend = usb.backend.libusb1.get_backend(find_library=lambda x: "/usr/lib/libusb-1.0.so")
+                self.iBase = usb.core.find(idVendor=self.VID, idProduct=self.PID, backend=backend)
+                if self.iBase.is_kernel_driver_active(0):
+                    self.iBase.detach_kernel_driver(0)
+                self.iBase.set_configuration()
+            except:
+                self.iBase = None
 
     def set_poll_type(self, poll_type = 'alpha'):
         self.poll_type = self.POLL_DICT[poll_type]
@@ -277,6 +327,13 @@ class iClickerPoll(object):
         for key in self.iClickerResponses:
             curr = self.iClickerResponses[key][-1]
             responses[curr.clicker_id] = curr
+        return responses
+
+    def get_responses_for_clicker_ids(self, clicker_ids):
+        responses = []
+        for cicker_id in clicker_ids:
+            response = self.iClickerResponses[clicker_id][-1]
+            responses.append(response)
         return responses
 
     def set_display(self, text, line):
