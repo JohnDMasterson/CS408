@@ -2,6 +2,8 @@ import pygame
 import time
 import random
 
+import iclicker
+
 pygame.font.init()
 pygame.init() 
 
@@ -55,8 +57,9 @@ def snake1(snakelist1, block_size):
 	if direction1 == "down":
                 head1 = pygame.transform.rotate(snakeHead1, 180)
 	'''
-	gameDisplay.blit(head1, (snakelist1[-1][0], snakelist1[-1][1]))
-	for XnY in snakelist1[:-1]:
+	#gameDisplay.blit(head1, (snakelist1[-1][0], snakelist1[-1][1]))
+	#for XnY in snakelist1[:-1]:
+	for XnY in snakelist1:
 		for XnY in snakelist1:
 			pygame.draw.rect(gameDisplay, green, [XnY[0], XnY[1], block_size, block_size])	
 
@@ -73,10 +76,12 @@ def message_to_screen(msg, color, y = 0):
 	textSurf, textRect = text_objects(msg, color)
 	textRect.center = (display_width/2), (display_height/2)+y
 	gameDisplay.blit(textSurf, textRect)
-	screen_text = font.render(msg, True, color)
-	gameDisplay.blit(screen_text, [display_width/2, display_height/2])
+	#screen_text = font.render(msg, True, color)
+	#gameDisplay.blit(screen_text, [display_width/2, display_height/2])
 
 def game_intro():
+	#poll = iClickerPoll()
+	#poll.start_poll()
 	intro = True
 	while intro:
 		for event in pygame.event.get():
@@ -99,6 +104,7 @@ def game_intro():
 	
 		pygame.display.update()
 		clock.tick(5)
+	
 
 
 #main game loop
@@ -293,7 +299,7 @@ def gameLoop():
 		snake1(snakelist1, block_size)
 		snake2(snakelist2, block_size)
 		
-		#score(snakelength1 - 1, snakelength2 - 1)
+		score(snakelength1 - 1, snakelength2 - 1)
 	
 		pygame.display.update()
 		
@@ -328,4 +334,5 @@ def gameLoop():
 	quit()
 
 
+game_intro()
 gameLoop()
