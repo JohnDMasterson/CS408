@@ -20,7 +20,7 @@ class iPacket(object):
         return self.packet.tostring()
 
     def print_packet(self):
-	print("Packet Data:")
+        print("Packet Data:")
         i = 0;
         for character in self.packet:
             if i%16 == 0 :
@@ -63,7 +63,6 @@ class iClickerBase(object):
     def syncronous_ctrl_transfer(self, data):
         self.ctrl_transfer(data)
         packet = self.read_packet()
-        packet.print_packet()
 
     def _read(self):
         with self.usb_lock:
@@ -154,33 +153,29 @@ class iClickerBase(object):
         data = [0x01, 0x11]
         self.syncronous_ctrl_transfer(data)
 
+    def stop_poll(self):
+        data = [0x01, 0x12]
+        self.syncronous_ctrl_transfer(data)
+        data = [0x01, 0x16]
+        self.syncronous_ctrl_transfer(data)
+        data = [0x01, 0x17, 0x01]
+        self.syncronous_ctrl_transfer(data)
+        data = [0x01, 0x17, 0x03]
+        self.syncronous_ctrl_transfer(data)
+        data = [0x01, 0x17, 0x04]
+        self.syncronous_ctrl_transfer(data)
+
     def get_responses(self):
         responses = []
         data = self.read_data()
         if data is not None:
             packet = iPacket(data)
-            packet.print_packet()
             response1 = iClickerResponse(data[:32])
             response1.parse_alpha_response()
             response2 = iClickerResponse(data[32:64])
             response2.parse_alpha_response()
             responses = [response1, response2]
         return responses
-
-    def show_responses(self):
-        show = 0
-        while show < 10:
-            data = self.read_data()
-            if data is not None:
-                packet = iPacket(data)
-                packet.print_packet()
-                response = iClickerResponse(data[:32])
-                response.parse_alpha_response()
-                response.print_response()
-                response = iClickerResponse(data[32:64])
-                response.parse_alpha_response()
-                response.print_response()
-                show = show + 1
 
 class iClickerResponse(object):
 
@@ -237,13 +232,16 @@ class iClickerPoll(object):
         self.last_response_num = 0
         self.isPolling = False
         self.pollThread = None
+        self._init_base()
 
-    def start_poll(self):
+    def _init_base(self):
         if self.iClickerBase is None:
             self.iClickerBase = iClickerBase()
             self.iClickerBase.get_base()
         if self.iClickerBase.initialized is False:
             self.iClickerBase.init_base()
+
+    def start_poll(self):
         self.iClickerBase.start_poll()
         self.isPolling = True
         self.poll_loop()
@@ -257,13 +255,11 @@ class iClickerPoll(object):
         while self.isPolling is True:
             responses = self.iClickerBase.get_responses()
             for response in responses:
-                response.print_response()
                 self.add_response(response)
-            if len(self.iClickerResponses) > 10:
-                self.end_poll()
 
     def end_poll(self):
         self.isPolling = False
+        self.iClickerBase.stop_poll()
 
     def add_response(self, response):
         if response.response_num > self.last_response_num:
@@ -272,10 +268,27 @@ class iClickerPoll(object):
         elif    self.last_response_num == 255 and response.response_num == 1:
             self.iClickerResponses[response.clicker_id].append(response)
             last_response_num = response.response_num
-        print len(self.iClickerResponses)
+
+    def get_all_responses(self):
+        return self.iClickerResponses
+
+    def get_latest_responses(self):
+        responses = defaultdict(list)
+        for key in self.iClickerResponses:
+            curr = self.iClickerResponses[key][-1]
+            responses[curr.clicker_id] = curr
+        return responses
+
+    def set_display(self, text, line):
+        self.iClickerBase.set_base_display(text, line)
 
 if __name__ == '__main__':
     poll = iClickerPoll()
+    poll.set_display("polling", 0)
     poll.start_poll()
-    while True:
-        a = 1
+    time.sleep(10)
+    poll.end_poll()
+    poll.set_display("done", 0)
+    responses = poll.get_all_responses()
+    for key in responses:
+        responses[key][1].print_response()
