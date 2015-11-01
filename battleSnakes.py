@@ -39,6 +39,9 @@ apple2 = pygame.image.load('apple2.png')
 direction1 = "left"
 direction2 = "right"
 
+teamGreen = []
+teamBlue = []
+
 def score(score1, score2):
 	text1 = font.render("Score: "+str(score1), True, green)
 	text2 = font.render("Score: "+str(score2), True, blue)
@@ -106,7 +109,14 @@ def game_intro():
 		clock.tick(5)
 	poll.end_poll()
 	responses = poll.get_all_responses()
+	for response in responses:
+                if response.response == 65:
+			teamGreen.append(response.clicker_id)
+		elif response.response == 66:
+			teamBlue.append(response.clicker_id)
 
+	print teamGreen
+	print teamBlue
 
 #main game loop
 def gameLoop():
