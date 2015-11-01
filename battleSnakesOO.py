@@ -4,7 +4,7 @@ except ImportError:
 	print "Hissss! An error occured while importing pygame. See http://pygame.org/wiki/GettingStarted for installation instructions"
 	quit()
 import time
-import snake_module
+from snake_module import *
 
 current_milli_time = lambda: int(round(time.time() * 1000))
 pygame.init()
@@ -33,11 +33,11 @@ score_font = pygame.font.SysFont(None, 25)
 
 text_board = pygame.image.load('text_board.png')
 
-board = snake_module.Board(display_width, display_height, block_size)
+board = Board(display_width, display_height, block_size)
 start_pos = board.random_empty_block()
-snakeA = snake_module.Snake(board, 1, green, "Green", start_pos)
+snakeA = Snake(board, 1, green, "Green", start_pos)
 start_pos = board.random_empty_block()
-snakeB = snake_module.Snake(board, 2, blue, "Blue", start_pos)
+snakeB = Snake(board, 2, blue, "Blue", start_pos)
 winner = None
 gameExit = False
 gameOver = False
@@ -46,8 +46,8 @@ game_over_shown = False
 image1 = pygame.transform.scale(pygame.image.load('apple.png'), (block_size, block_size))
 image2 = pygame.transform.scale(pygame.image.load('apple2.png'), (block_size, block_size))
 
-appleA = snake_module.Apple(0, 0, image1, 1)
-appleB = snake_module.Apple(0, 0, image2, -1)
+appleA = Apple(0, 0, image1, 1)
+appleB = Apple(0, 0, image2, -1)
 
 appleA.pos = board.random_empty_block()
 appleB.pos = board.random_empty_block()
@@ -140,8 +140,9 @@ def gameloop(game_input):
 			game_over(winner, game_input)
 			#print "game over"
 		else:
-			snakeA.change_direction(game_input[0].key)
-			snakeB.change_direction(game_input[1].key)
+			if not game_input is None:
+				snakeA.change_direction(game_input[0].key)
+				snakeB.change_direction(game_input[1].key)
 			#update snake location
 			snakeA.move()
 			snakeB.move()
@@ -191,6 +192,11 @@ def gameloop(game_input):
 						snakeA.increase_length()
 					elif apple.effect is -1:
 						snakeA.decrease_length()
+						if snakeA.length <= 0:
+							gameOver = True
+							winner = snakeB
+							game_over(winner)
+							return
 					board.make_block_empty(apple.pos[0], apple.pos[1])
 					#create new apple
 					apple.pos = board.random_empty_block()
@@ -199,6 +205,12 @@ def gameloop(game_input):
                                                 snakeB.increase_length()
                                         elif apple.effect is -1:
                                                 snakeB.decrease_length()
+						if snakeB.length <= 0:
+                                                        gameOver = True
+                                                        winner = snakeA
+                                                        game_over(winner)
+                                                        return
+
 					board.make_block_empty(apple.pos[0], apple.pos[1])
 					apple.pos = board.random_empty_block()
 			#draw all the stuff
@@ -236,18 +248,50 @@ def update_time_bar():
 def clear_panel():
 	pygame.draw.rect(gameDisplay, white, [display_width, 0, panel_width, display_height])
 
-inputs = [snake_module.GameInput('u', 5), snake_module.GameInput('d', 5)]
-test = True
+def clear_raw_inputs():
+	global raw_inputs, inputs
+	inputs = [GameInput('u', 0), GameInput('d', 0)]
+	raw_inputs = [[GameInput('u', 0), GameInput('r', 0), GameInput('d', 0), GameInput('l', 0)], [GameInput('u', 0), GameInput('r', 0), GameInput('d', 0), GameInput('l', 0)]]
+
+def update_inputs():
+	global inputs, raw_inputs
+	index = 0
+	for keys in raw_inputs:
+		key = random.choice(['u', 'd', 'l', 'r'])
+		for k in keys:
+			if key == k.key:
+				k.count += 1
+				if k.count > inputs[index].count:
+					inputs[index] = k
+				break
+		index += 1
+
+def print_inputs():
+        global inputs, raw_inputs
+	print "========="
+        for keys in raw_inputs:
+                for k in keys:
+			print k.count
+		print ""
+	print ""
+
+inputs = None
+raw_inputs = None
+clear_raw_inputs()
 gameDisplay.fill(white)
 last_frame_time = current_milli_time()
 draw_game()
 pygame.display.update()
 
-while test:
+while True:
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			quit()
+	update_inputs()
 	clear_panel()
 	update_time_bar()
 	if next_frame_time():
 		gameloop(inputs)
+		#print_inputs()
+		clear_raw_inputs()
 	pygame.display.update()
-	inputs[0].random_input()
-	inputs[1].random_input()

@@ -72,7 +72,7 @@ class Snake:
                         self.length -= 1
                 elif(self.length == 1):
                         #TODO this is an edge case
-                        self.length = self.length
+                        self.length = 0
                 else:
                         #TODO what should be done?
                         self.length = self.length
