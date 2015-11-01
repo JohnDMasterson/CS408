@@ -220,10 +220,10 @@ def gameloop(game_input):
 		pygame.quit()
 		quit()
 
-def next_frame_time():
+def next_frame_time(duration):
 	global last_frame_time
 
-	diff = 1000.0/FPS
+	diff = duration*1000.0#/FPS
 	if current_milli_time() - last_frame_time >= diff:
 		last_frame_time = current_milli_time()
 		return True
@@ -238,8 +238,8 @@ def clamp(min_num, max_num, num):
 	else:
 		return num
 
-def update_time_bar():
-	ratio = clamp(0, 1, FPS*(current_milli_time() - last_frame_time)/1000.0)
+def update_time_bar(duration):
+	ratio = clamp(0, 1, (current_milli_time() - last_frame_time)/(1000.0*duration))
 	color_change = int(255*ratio)
 	color = (0+color_change, 255-color_change, 0)
 	pygame.draw.rect(gameDisplay, color, [2*board.margin + 15 + board.width, board.margin + board.height/2 - 15, panel_width - 30, 20], 2)
@@ -274,7 +274,7 @@ def print_inputs():
 			print k.count
 		print ""
 	print ""
-
+duration = 1.0/FPS
 inputs = None
 raw_inputs = None
 clear_raw_inputs()
@@ -289,9 +289,13 @@ while True:
 			quit()
 	update_inputs()
 	clear_panel()
-	update_time_bar()
-	if next_frame_time():
+	update_time_bar(duration)
+	if next_frame_time(duration):
 		gameloop(inputs)
 		#print_inputs()
 		clear_raw_inputs()
+		if gameOver:
+			duration = 5
+		else:
+			duration = 1.0/FPS
 	pygame.display.update()

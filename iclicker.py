@@ -236,6 +236,7 @@ class iClickerPoll(object):
         self.iClickerResponses = defaultdict(list)
         self.last_response_num = 0
         self.isPolling = False
+        self.pollThread = None
 
     def start_poll(self):
         if self.iClickerBase is None:
@@ -248,6 +249,11 @@ class iClickerPoll(object):
         self.poll_loop()
 
     def poll_loop(self):
+        t = threading.Thread(target = self._poll_loop_thread)
+        t.daemon = True
+        t.start()
+
+    def _poll_loop_thread(self):
         while self.isPolling is True:
             responses = self.iClickerBase.get_responses()
             for response in responses:
@@ -271,3 +277,5 @@ class iClickerPoll(object):
 if __name__ == '__main__':
     poll = iClickerPoll()
     poll.start_poll()
+    while True:
+        a = 1
