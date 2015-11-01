@@ -109,8 +109,9 @@ def game_intro():
 		clock.tick(5)
 	poll.end_poll()
 	responses = poll.get_all_responses()
-	for response in responses:
-                if response.response == 65:
+	for key in responses:
+		response = responses[key][-1]
+		if response.response == 65:
 			teamGreen.append(response.clicker_id)
 		elif response.response == 66:
 			teamBlue.append(response.clicker_id)
