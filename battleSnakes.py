@@ -80,8 +80,8 @@ def message_to_screen(msg, color, y = 0):
 	#gameDisplay.blit(screen_text, [display_width/2, display_height/2])
 
 def game_intro():
-	poll = iClickerPoll()
-	poll.start_poll()
+	#poll = iClickerPoll()
+	#poll.start_poll()
 	intro = True
 	while intro:
 		for event in pygame.event.get():
