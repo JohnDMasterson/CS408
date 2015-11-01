@@ -113,8 +113,6 @@ def gameLoop():
 	global winner
 	global direction1
 	global direction2
-	poll = iclicker.iClickerPoll()
-	poll.start_poll()
 
 	direction1 = "left"
 	direction2 = "right"
