@@ -30,7 +30,7 @@ class iPacket(object):
             print "%02X " % character ,
             i = i+1
 
-class BaseAbstract(object):
+class BaseInterface(object):
     initalized = False
     frequency = None
     poll_type = None
@@ -68,7 +68,7 @@ class BaseAbstract(object):
     def show_responses(self):
         raise NotImplementedError()
 
-class iClickerBaseMock(BaseAbstract):
+class iClickerBaseMock(BaseInterface):
         def set_poll_type(self, poll_type = 'alpha'):
             super(iClickerBaseMock, self).set_poll_type(poll_type)
 
@@ -92,7 +92,7 @@ class iClickerBaseMock(BaseAbstract):
         def show_responses(self):
             print "not setup"
 
-class iClickerBase(BaseAbstract):
+class iClickerBase(BaseInterface):
 
     # Constants for usb stuff
     VID = 0x1881
