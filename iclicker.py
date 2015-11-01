@@ -99,12 +99,12 @@ class iClickerBase(BaseAbstract):
         self.usb_lock = threading.RLock()
 
     def ctrl_transfer(self, data):
-        #try:
+        try:
             packet = iPacket(data)
             with self.usb_lock:
                 self.iBase.ctrl_transfer(self.BRT, self.PBR, self.VAL, self.IDX, packet.packet_data())
             time.sleep(0.2)
-        #except:
+        except:
             time.sleep(0.2)
 
     def syncronous_ctrl_transfer(self, data):
@@ -338,7 +338,7 @@ class iClickerPoll(object):
             response = self.iClickerResponses[clicker_id]
             if len(response) > 0:
                 response = response[-1]
-                responses.append(response)
+                responses.append(response.response)
         return responses
 
     def set_display(self, text, line):
