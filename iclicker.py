@@ -55,10 +55,13 @@ class iClickerBase(object):
         self.usb_lock = threading.RLock()
 
     def ctrl_transfer(self, data):
-        packet = iPacket(data)
-        with self.usb_lock:
-            self.iBase.ctrl_transfer(self.BRT, self.PBR, self.VAL, self.IDX, packet.packet_data())
-        time.sleep(0.2)
+        try:
+            packet = iPacket(data)
+            with self.usb_lock:
+                self.iBase.ctrl_transfer(self.BRT, self.PBR, self.VAL, self.IDX, packet.packet_data())
+            time.sleep(0.2)
+        except:
+            time.sleep(0.2)
 
     def syncronous_ctrl_transfer(self, data):
         self.ctrl_transfer(data)
@@ -83,11 +86,14 @@ class iClickerBase(object):
 
     def get_base(self):
         with self.usb_lock:
-            backend = usb.backend.libusb1.get_backend(find_library=lambda x: "/usr/lib/libusb-1.0.so")
-            self.iBase = usb.core.find(idVendor=self.VID, idProduct=self.PID, backend=backend)
-            if self.iBase.is_kernel_driver_active(0):
-                self.iBase.detach_kernel_driver(0)
-            self.iBase.set_configuration()
+            try:
+                backend = usb.backend.libusb1.get_backend(find_library=lambda x: "/usr/lib/libusb-1.0.so")
+                self.iBase = usb.core.find(idVendor=self.VID, idProduct=self.PID, backend=backend)
+                if self.iBase.is_kernel_driver_active(0):
+                    self.iBase.detach_kernel_driver(0)
+                self.iBase.set_configuration()
+            except:
+                self.iBase = None
 
     def set_poll_type(self, poll_type = 'alpha'):
         self.poll_type = self.POLL_DICT[poll_type]
