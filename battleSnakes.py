@@ -5,7 +5,7 @@ import random
 import iclicker
 
 pygame.font.init()
-pygame.init() 
+pygame.init()
 
 white = (255, 255, 255)
 black = (0,0,0)
@@ -61,7 +61,7 @@ def snake1(snakelist1, block_size):
 	#for XnY in snakelist1[:-1]:
 	for XnY in snakelist1:
 		for XnY in snakelist1:
-			pygame.draw.rect(gameDisplay, green, [XnY[0], XnY[1], block_size, block_size])	
+			pygame.draw.rect(gameDisplay, green, [XnY[0], XnY[1], block_size, block_size])
 
 def snake2(snakelist2, block_size):
 	for XnY in snakelist2:
@@ -80,8 +80,8 @@ def message_to_screen(msg, color, y = 0):
 	#gameDisplay.blit(screen_text, [display_width/2, display_height/2])
 
 def game_intro():
-	#poll = iClickerPoll()
-	#poll.start_poll()
+	poll = iclicker.iClickerPoll()
+	poll.start_poll()
 	intro = True
 	while intro:
 		for event in pygame.event.get():
@@ -99,12 +99,13 @@ def game_intro():
 		message_to_screen("B = left", green, 100)
 		message_to_screen("C = down", green, 150)
 		message_to_screen("D = right", green, 200)
-		
+
 		message_to_screen("press P to play", red, 250)
-	
+
 		pygame.display.update()
 		clock.tick(5)
-	
+	poll.end_poll()
+	responses = poll.get_all_responses()
 
 
 #main game loop
@@ -112,28 +113,30 @@ def gameLoop():
 	global winner
 	global direction1
 	global direction2
-	
+	poll = iclicker.iClickerPoll()
+	poll.start_poll()
+
 	direction1 = "left"
 	direction2 = "right"
 
 	#list of all coordinates for the snakes
-	snakelist1 = [] 
+	snakelist1 = []
 	snakelist2 = []
 	snakelength1 = 1
-	snakelength2 = 1	
+	snakelength2 = 1
 
 	#starting coordinates
-	lead_x1 = display_width/2 - block_size 
+	lead_x1 = display_width/2 - block_size
 	lead_y1 = display_height/2
-	
+
 	#change in starting coordinates
-	lead_x_change1 = -10 
+	lead_x_change1 = -10
 	lead_y_change1 = 0
 
 	lead_x2 = display_width/2 + block_size
         lead_y2 = display_height/2
         lead_x_change2 = 10
-        lead_y_change2 = 0	
+        lead_y_change2 = 0
 
 	gameExit = False
 	gameOver = False
@@ -145,7 +148,7 @@ def gameLoop():
 	#random coordinates of apple 2
 	randApple2X = round(random.randrange(0, display_width - block_size)/10.0)*10.0
 	randApple2Y = round(random.randrange(0, display_height - block_size)/10.0)*10.0
-	
+
 	while not gameExit:
 		global winner
 		while gameOver == True:
@@ -171,7 +174,7 @@ def gameLoop():
 						gameOver = False
 					if event.key == pygame.K_p:
 						gameLoop()
-		
+
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				gameExit = True
@@ -197,7 +200,7 @@ def gameLoop():
 						direction1 = "down"
 	                                	lead_y_change1 = block_size
 						lead_x_change1 = 0
-		
+
 				if event.key == pygame.K_a:
 					if direction2 != "right":
 						direction2 = "left"
@@ -239,13 +242,13 @@ def gameLoop():
 		lead_y1 += lead_y_change1
 		lead_x2 += lead_x_change2
                 lead_y2 += lead_y_change2
-		
+
 		gameDisplay.fill(white)
-		
+
 		#draw random apple
 		#pygame.draw.rect(gameDisplay, green, [randApple2X, randApple2Y, block_size, block_size])
 		gameDisplay.blit(apple, (randAppleX, randAppleY))
-		
+
 		gameDisplay.blit(apple2, (randApple2X,randApple2Y))
 		#update lists
 		snakehead1 = []
@@ -257,9 +260,9 @@ def gameLoop():
                 snakehead2.append(lead_x2)
                 snakehead2.append(lead_y2)
                 snakelist2.append(snakehead2)
-		
-		#last element is head	
-		
+
+		#last element is head
+
 		#remove last element from list
 		if len(snakelist1) > snakelength1:
 			for i in range(0,len(snakelist1) - snakelength1):
@@ -267,7 +270,7 @@ def gameLoop():
 		if len(snakelist2) > snakelength2:
 			for i in range(0,len(snakelist2) - snakelength2):
                                 del snakelist2[i]
-	
+
 		#head-on collision
 		if snakehead2 == snakehead1:
 			print 'found head on'
@@ -278,8 +281,8 @@ def gameLoop():
 				winner = 2
 			else:
 				winner = 0
-		
-		#checking for self collision	
+
+		#checking for self collision
 		for each1 in snakelist1[:-1]:
 			if each1 == snakehead1:
 				gameOver = True
@@ -298,11 +301,11 @@ def gameLoop():
 
 		snake1(snakelist1, block_size)
 		snake2(snakelist2, block_size)
-		
+
 		score(snakelength1 - 1, snakelength2 - 1)
-	
+
 		pygame.display.update()
-		
+
 		#if apple eaten, create new apple and update length
 		if lead_x1 == randAppleX and lead_y1 == randAppleY:
 			randAppleX = round(random.randrange(0, display_width - block_size)/10.0)*10.0
@@ -319,7 +322,7 @@ def gameLoop():
 			if snakelength2 == 0:
 				gameOver = True
 				winner = 1
-			
+
 		elif lead_x2 == randApple2X and lead_y2 == randApple2Y:
                         randApple2X = round(random.randrange(0, display_width - block_size)/10.0)*10.0
                         randApple2Y = round(random.randrange(0, display_height - block_size)/10.0)*10.0
@@ -329,7 +332,7 @@ def gameLoop():
 				winner = 2
 
 		clock.tick(FPS)
-	
+
 	pygame.quit()
 	quit()
 
