@@ -86,7 +86,7 @@ class iClickerBase(BaseAbstract):
     IDX = 0x0000
 
     PACKET_LENGTH = 64
-    TIMEOUT = 100
+    TIMEOUT = 10
 
     FREQ_DICT = {'a':0,'A':0, 'b':1,'B':1, 'c':2,'C':2, 'd':3,'D':3}
 
@@ -327,6 +327,13 @@ class iClickerPoll(object):
         for key in self.iClickerResponses:
             curr = self.iClickerResponses[key][-1]
             responses[curr.clicker_id] = curr
+        return responses
+
+    def get_responses_for_clicker_ids(self, clicker_ids):
+        responses = []
+        for cicker_id in clicker_ids:
+            response = self.iClickerResponses[clicker_id][-1]
+            responses.append(response)
         return responses
 
     def set_display(self, text, line):
