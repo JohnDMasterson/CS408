@@ -188,7 +188,10 @@ def gameLoop():
 					if event.key == pygame.K_p:
 						gameLoop()
 
-		#teamGreenClicks = poll.get
+		teamGreenClicks = poll.get_responses_for_clicker_ids(teamGreen)
+		teamBlueClicks = poll.get_responses_for_clicker_ids(teamBlue)
+		print teamGreenClicks
+		print teamBlueClicks
 		'''
 		#for event in pygame.event.get():
 		while(1):
