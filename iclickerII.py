@@ -44,11 +44,15 @@ class iclickerII:
 		self.poll.end_poll
 
 	def current_group_responses(self):
-		return_val = len(self.groups)*[5*[0]]
+		o = len(self.identifiers) - 1
+		return_val = [5*[0]]
+		while o > 0:
+			return_val.append(5*[0])
+			o -= 1
 		for clickerId in self.poll.iClickerResponses:
 			responses = self.poll.iClickerResponses[clickerId]
 			if clickerId in self.groups:
-				return_val[self.groups[clickerId] - 1][responses[-1].response - ord('A')] += 1
+				return_val[(self.groups[clickerId] - 1)][(responses[-1].response - ord('A'))] += 1
 		return return_val
 
 	def current_responses(self):

@@ -8,12 +8,25 @@ class Snake:
 		self.snake_name = snake_name
                 self.snake_color = snake_color
                 self.board = board
+		self.last_head = start_pos
                 self.head = start_pos
                 self.snake_list = []
 		self.direction = '0'
 		self.direction_block = [0, 0]
                 self.snake_list.append(self.head)
 		board.make_block_occupied(start_pos[0], start_pos[1])
+
+	def reset_snake(self, start_pos):
+		self.length = 1
+		self.last_head = start_pos
+		self.head = start_pos
+		self.direction = '0'
+                self.direction_block = [0, 0]
+		for each in self.snake_list:
+                        self.board.make_block_empty(each[0], each[1])
+		self.snake_list = []
+                self.snake_list.append(self.head)
+                self.board.make_block_occupied(start_pos[0], start_pos[1])
 
 	def change_direction(self, new_direction):
 		if new_direction == self.direction:
@@ -46,10 +59,12 @@ class Snake:
 	def collided(self, other_snake):
 		if self.self_collided():
 			return True
-		for each in other_snake.snake_list[:-1]:
+		for each in other_snake.snake_list:
 			if each == self.head:
 				print "Collision"
 				return True
+		if other_snake.old_head == self.head and self.old_head == other_snake.head:
+			return True
                 return False
 
 	def opposite_direction(self, new_direction):
@@ -86,6 +101,7 @@ class Snake:
 			return False
 
         def move(self):
+		self.old_head = self.head
                 #this is only updating the internal representation of the snake
                 x = self.head[0] + self.direction_block[0]
                 y = self.head[1] + self.direction_block[1]

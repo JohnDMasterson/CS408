@@ -104,14 +104,25 @@ def print_snake(snake):
 
 
 def game_over(winner_snake, game_input=None):
-	global game_over_shown 
+	global game_over_shown, gameOver 
 	if not game_over_shown:
 		if winner_snake is None:
 			message_to_screen("Game Over!", black, "It's a tie! Press 'A' to play again or 'B' to quit")
 		else:
 			message_to_screen("Game Over!", black, winner_snake.snake_name+" snake wins. Press 'A' to play again or 'B' to quit")
 		game_over_shown = True
-
+	if not game_input is None:
+		inp = game_input[1]
+		if game_input[0].count > game_input[1].count:
+			inp = game_input[0]
+		if inp.key is 'u':#A
+			snakeA.reset_snake(board.random_empty_block())
+			snakeB.reset_snake(board.random_empty_block())
+			game_over_shown = False
+			gameOver = False
+			draw_game()
+		elif inp.key is 'l': #B
+			quit()
 
 def edge_case_winner(snakeA, snakeB):
 	#no winner or winner is longer snake
@@ -260,20 +271,29 @@ def update_time_bar(duration):
 	pygame.draw.rect(gameDisplay, grey, [2*board.margin + 15 + board.width + 4, board.margin + board.height/2 - 15 + 4, (1 - ratio) * (panel_width - 38), 13])
 
 def clear_panel():
-	pygame.draw.rect(gameDisplay, white, [display_width, 0, panel_width, display_height])
+	pygame.draw.rect(gameDisplay, white, [display_width+5, 0, panel_width, display_height])
 
 def clear_raw_inputs():
 	global raw_inputs, inputs
-	inputs = [GameInput('u', 0), GameInput('d', 0)]
-	raw_inputs = [[GameInput('u', 0), GameInput('r', 0), GameInput('d', 0), GameInput('l', 0)], [GameInput('u', 0), GameInput('r', 0), GameInput('d', 0), GameInput('l', 0)]]
+	if inputs is None:
+		inputs = [GameInput('u', 0), GameInput('d', 0)]
+	for inp in inputs:
+		inp.count = 0
+	raw_inputs = [[GameInput('u', 0), GameInput('l', 0), GameInput('d', 0), GameInput('r', 0)], [GameInput('u', 0), GameInput('l', 0), GameInput('d', 0), GameInput('r', 0)]]
 
 def update_inputs():
 	global inputs, raw_inputs
-	index = 0
+	i = 0
+	j = 0
+	
 	for group in poll.current_group_responses():
+		j = 0
 		for resp in group[:4]:
-			raw_inputs[index].count = resp 
-			index += 1
+			raw_inputs[i][j].count = resp
+			if raw_inputs[i][j].count > inputs[i].count:
+				inputs[i] = raw_inputs[i][j]
+			j += 1
+		i += 1
 
 def game_intro():
 	gameDisplay.fill(white)
@@ -303,9 +323,10 @@ draw_game()
 intro = True
 pygame.display.update()
 
-poll.create_groups(['A', 'B', 'C', 'D', 'E'])
-time.sleep(0.1)
+poll.create_groups(['A', 'B'])
+
 while intro:
+	time.sleep(0.01)
 	game_intro()
 	for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -324,6 +345,7 @@ last_frame_time = current_milli_time()
 draw_game()
 
 while True:
+	time.sleep(0.01)
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			quit()

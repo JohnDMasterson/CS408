@@ -259,8 +259,8 @@ class iClickerPoll(object):
             for response in responses:
                 response.print_response()
                 self.add_response(response)
-            if len(self.iClickerResponses) > 10:
-                self.end_poll()
+            #if len(self.iClickerResponses) > 10:
+            #    self.end_poll()
 
     def end_poll(self):
         self.isPolling = False
