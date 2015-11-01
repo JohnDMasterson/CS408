@@ -83,8 +83,9 @@ def message_to_screen(msg, color, y = 0):
 	#gameDisplay.blit(screen_text, [display_width/2, display_height/2])
 
 def game_intro():
-	#poll = iclicker.iClickerPoll()
-	#poll.start_poll()
+	global poll
+	poll = iclicker.iClickerPoll()
+	poll.start_poll()
 	intro = True
 	while intro:
 		for event in pygame.event.get():
@@ -107,7 +108,7 @@ def game_intro():
 
 		pygame.display.update()
 		clock.tick(5)
-	'''
+
 	poll.end_poll()
 	responses = poll.get_all_responses()
 	for key in responses:
@@ -116,8 +117,10 @@ def game_intro():
 			teamGreen.append(response.clicker_id)
 		elif response.response == 66:
 			teamBlue.append(response.clicker_id)
-	'''
+
+	print "Green Team: " ,
 	print teamGreen
+	print "Blue Team: " ,
 	print teamBlue
 
 #main game loop
@@ -159,7 +162,7 @@ def gameLoop():
 	randApple2X = round(random.randrange(0, display_width - block_size)/10.0)*10.0
 	randApple2Y = round(random.randrange(0, display_height - block_size)/10.0)*10.0
 
-	poll = iclicker.iClickerPoll()
+	poll.clear_responses()
 	poll.start_poll()
 
 	while not gameExit:

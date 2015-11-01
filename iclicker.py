@@ -86,7 +86,7 @@ class iClickerBase(BaseAbstract):
     IDX = 0x0000
 
     PACKET_LENGTH = 64
-    TIMEOUT = 10
+    TIMEOUT = 100
 
     FREQ_DICT = {'a':0,'A':0, 'b':1,'B':1, 'c':2,'C':2, 'd':3,'D':3}
 
@@ -99,12 +99,12 @@ class iClickerBase(BaseAbstract):
         self.usb_lock = threading.RLock()
 
     def ctrl_transfer(self, data):
-        try:
+        #try:
             packet = iPacket(data)
             with self.usb_lock:
                 self.iBase.ctrl_transfer(self.BRT, self.PBR, self.VAL, self.IDX, packet.packet_data())
             time.sleep(0.2)
-        except:
+        #except:
             time.sleep(0.2)
 
     def syncronous_ctrl_transfer(self, data):
@@ -311,6 +311,9 @@ class iClickerPoll(object):
         self.isPolling = False
         self.iClickerBase.stop_poll()
 
+    def clear_responses(self):
+        self.iClickerResponses = defaultdict(list)
+
     def add_response(self, response):
         if response.response_num > self.last_response_num:
             self.iClickerResponses[response.clicker_id].append(response)
@@ -331,9 +334,11 @@ class iClickerPoll(object):
 
     def get_responses_for_clicker_ids(self, clicker_ids):
         responses = []
-        for cicker_id in clicker_ids:
-            response = self.iClickerResponses[clicker_id][-1]
-            responses.append(response)
+        for clicker_id in clicker_ids:
+            response = self.iClickerResponses[clicker_id]
+            if len(response) > 0:
+                response = response[-1]
+                responses.append(response)
         return responses
 
     def set_display(self, text, line):
@@ -346,6 +351,7 @@ if __name__ == '__main__':
     time.sleep(10)
     poll.end_poll()
     poll.set_display("done", 0)
+
     responses = poll.get_all_responses()
     for key in responses:
         responses[key][1].print_response()
