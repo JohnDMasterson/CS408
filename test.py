@@ -1,5 +1,19 @@
 import unittest
 import iclicker
+import binascii
+
+def generatePacket(response, clickerId):
+    clickerId_0 = int(clickerId[0:2], 16)
+    clickerId_1 = int(clickerId[2:4], 16)
+    clickerId_2 = int(clickerId[4:6], 16)
+
+    packetData = [0x02, 0x13, int(response, 16), clickerId_0, clickerId_1, clickerId_2, generatePacket.count, 0x00]
+
+    packet = iclicker.iPacket(packetData)
+
+    packet.print_packet()
+generatePacket.count = 0;
+
 
 base = iclicker.iClickerBaseMock()
 
@@ -51,7 +65,7 @@ assert(base.poll_type == 2)
 print "PASS\n"
 
 
-# polling
+# polling tests
 print "polling:"
 
 # stopping a non-existent poll
@@ -103,3 +117,5 @@ assert(error == True)
 
 
 print "PASS\n"
+
+generatePacket('A', '1F156963')

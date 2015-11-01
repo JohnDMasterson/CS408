@@ -9,7 +9,7 @@ import logging, time, sys
 import threading
 
 class iPacket(object):
-    def __init__(self, data=None):
+    def __init__(self, data = None):
         if data is None:
             data = []
         self.packet = array('B', data[:64])
