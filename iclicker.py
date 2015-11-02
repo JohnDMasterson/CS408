@@ -30,37 +30,21 @@ class iPacket(object):
             print "%02X " % character ,
             i = i+1
 
-class BaseInterface(object):
-    initalized = False
-    frequency = None
-    poll_type = None
-    poll_active = False
-    FREQ_DICT = {'a':0,'A':0, 'b':1,'B':1, 'c':2,'C':2, 'd':3,'D':3}
-    POLL_DICT = {'alpha':0, 'numeric':1, 'alphanumeric':2}
+class BaseAbstract(object):
+    def set_poll_type(self):
+        raise NotImplementedError()
 
-    def set_poll_type(self, poll_type = 'alpha'):
-        self.poll_type = self.POLL_DICT[poll_type]
-
-    def set_frequency(self, first = 'A', second = 'A'):
-        self.frequency = [self.FREQ_DICT[first], self.FREQ_DICT[second]]
+    def set_frequency(self):
+        raise NotImplementedError()
 
     def set_base_display(self):
         raise NotImplementedError()
 
     def init_base(self):
-        self.set_frequency()
+        raise NotImplementedError()
 
     def start_poll(self):
-        if (self.poll_active == True):
-            raise ValueError('Attempted to start a poll while a poll was already active.')
-
-        self.poll_active = True
-
-    def stop_poll(self):
-        if (self.poll_active == False):
-            raise ValueError('Attempted to stop a poll while there\'s no active poll.')
-
-        self.poll_active = False
+        raise NotImplementedError()
 
     def get_responses(self):
         raise NotImplementedError()
@@ -68,23 +52,21 @@ class BaseInterface(object):
     def show_responses(self):
         raise NotImplementedError()
 
-class iClickerBaseMock(BaseInterface):
+class iClickerBaseMock(BaseAbstract):
         def set_poll_type(self, poll_type = 'alpha'):
-            super(iClickerBaseMock, self).set_poll_type(poll_type)
+            print "not setup"
 
         def set_frequency(self, first = 'A', second = 'A'):
-            super(iClickerBaseMock, self).set_frequency(first, second)
+            print "not setup"
+
+        def set_base_display(self, string, line):
+            print "not setup"
 
         def init_base(self):
-            super(iClickerBaseMock, self).init_base()
-            self.initalized = True
+            print "not setup"
 
         def start_poll(self, poll_type = 'alpha'):
-            self.set_poll_type(poll_type)
-            super(iClickerBaseMock, self).start_poll()
-
-        def stop_poll(self):
-            super(iClickerBaseMock, self).stop_poll()
+            print "not setup"
 
         def get_responses(self):
             print "not setup"
@@ -92,7 +74,7 @@ class iClickerBaseMock(BaseInterface):
         def show_responses(self):
             print "not setup"
 
-class iClickerBase(BaseInterface):
+class iClickerBase(BaseAbstract):
 
     # Constants for usb stuff
     VID = 0x1881
@@ -106,8 +88,14 @@ class iClickerBase(BaseInterface):
     PACKET_LENGTH = 64
     TIMEOUT = 100
 
+    FREQ_DICT = {'a':0,'A':0, 'b':1,'B':1, 'c':2,'C':2, 'd':3,'D':3}
+
+    POLL_DICT = {'alpha':0, 'numeric':1, 'alphanumeric':2}
+
     def __init__(self):
         self.iBase = None
+        self.initialized = False
+        self.frequency = None
         self.usb_lock = threading.RLock()
 
     def ctrl_transfer(self, data):
@@ -152,8 +140,8 @@ class iClickerBase(BaseInterface):
                 self.iBase = None
 
     def set_poll_type(self, poll_type = 'alpha'):
-        super(iClickerBase, self).set_poll_type(poll_type)
-        data = [0x01, 0x19, 0x66 + self.poll_type, 0x0a, 0x01]
+        self.poll_type = self.POLL_DICT[poll_type]
+        data = [0x01, 0x19, 0x66+self.poll_type, 0x0a, 0x01]
         self.syncronous_ctrl_transfer(data)
 
     def set_version_2(self):
@@ -161,9 +149,11 @@ class iClickerBase(BaseInterface):
         self.syncronous_ctrl_transfer(data)
 
     def set_frequency(self, first = 'A', second = 'A'):
-        super(iClickerBase, self).set_frequency(first, second)
-        first = (self.frequency[0] + 0x21)
-        second = 0x41 + self.frequency[1]
+        first = self.FREQ_DICT[first]
+        second = self.FREQ_DICT[second]
+        self.frequency = [first, second]
+        first = (first + 0x21)
+        second = 0x41 + second
         data = [0x01, 0x10, first, second]
         self.syncronous_ctrl_transfer(data)
         data = [0x01, 0x16]
@@ -178,7 +168,8 @@ class iClickerBase(BaseInterface):
         self.syncronous_ctrl_transfer(data)
 
     def init_base(self):
-        super(iClickerBase, self).init_base()
+        self.set_frequency()
+
         data = [0x01, 0x2A, 0x21, 0x41, 0x05]
         self.syncronous_ctrl_transfer(data)
         data = [0x01, 0x12]
@@ -202,17 +193,17 @@ class iClickerBase(BaseInterface):
         self.initialized = True
 
     def start_poll(self, poll_type = 'alpha'):
-        super(iClickerBase, self).start_poll()
         data = [0x01, 0x17, 0x03]
         self.syncronous_ctrl_transfer(data)
         data = [0x01, 0x17, 0x05]
         self.syncronous_ctrl_transfer(data)
 
+        self.set_poll_type(poll_type)
+
         data = [0x01, 0x11]
         self.syncronous_ctrl_transfer(data)
 
     def stop_poll(self):
-        super(iClickerBase, self).stop_poll()
         data = [0x01, 0x12]
         self.syncronous_ctrl_transfer(data)
         data = [0x01, 0x16]
