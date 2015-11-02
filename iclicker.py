@@ -31,7 +31,7 @@ class iPacket(object):
             i = i+1
 
 class BaseInterface(object):
-    initalized = False
+    initialized = False
     frequency = None
     poll_type = None
     poll_active = False
@@ -77,7 +77,7 @@ class iClickerBaseMock(BaseInterface):
 
         def init_base(self):
             super(iClickerBaseMock, self).init_base()
-            self.initalized = True
+            self.initialized = True
 
         def start_poll(self, poll_type = 'alpha'):
             self.set_poll_type(poll_type)
@@ -150,6 +150,7 @@ class iClickerBase(BaseInterface):
                 self.iBase.set_configuration()
             except:
                 self.iBase = None
+                raise ValueError('iClicker base not recognized: Make sure that it\'s plugged in.')
 
     def set_poll_type(self, poll_type = 'alpha'):
         super(iClickerBase, self).set_poll_type(poll_type)
@@ -342,7 +343,11 @@ class iClickerPoll(object):
         self.iClickerBase.set_base_display(text, line)
 
 if __name__ == '__main__':
-    poll = iClickerPoll()
+    try:
+        poll = iClickerPoll()
+    except ValueError as e:
+        print e
+
     poll.set_display("polling", 0)
     poll.start_poll()
     time.sleep(10)
