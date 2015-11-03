@@ -109,7 +109,10 @@ def make_input_graph(inputs, color):
 		total += inp.count
 	i = 0
 	for inp in inputs:
-		width = maxWidth*inp.count/total
+		if total == 0:
+			width = 0
+		else:
+			width = maxWidth*inp.count/total
 		label1 = graph_font.render(keys[i], True, color)
                 label2 = graph_font.render(keys2[i], True, color)
 		pygame.draw.rect(content, color, [xPos, yPos[i], width, height])
@@ -336,7 +339,7 @@ def clear_raw_inputs():
 		inputs = [GameInput('u', 0), GameInput('d', 0)]
 	for inp in inputs:
 		inp.count = 0
-	raw_inputs = [[GameInput('u', 0), GameInput('l', 0), GameInput('d', 0), GameInput('r', 0)], [GameInput('u', 0), GameInput('l', 0), GameInput('d', 0), GameInput('r', 0)]]
+	raw_inputs = [[GameInput('u', 0), GameInput('l', 0), GameInput('r', 0), GameInput('d', 0)], [GameInput('u', 0), GameInput('l', 0), GameInput('r', 0), GameInput('d', 0)]]
 
 def update_inputs():
 	global inputs, raw_inputs
@@ -357,9 +360,9 @@ def game_intro():
         old_message_to_screen("Press A to choose green snake and press B to choose blue snake !", green)
         old_message_to_screen("A = up", green, 50)
         old_message_to_screen("B = left", green, 100)
-        old_message_to_screen("C = down", green, 150)
-        old_message_to_screen("D = right", green, 200)
-        old_message_to_screen("press P to play", red, 250)
+        old_message_to_screen("C = right", green, 150)
+        old_message_to_screen("D = down", green, 200)
+        #old_message_to_screen("press P to play", red, 250)
 
 def print_inputs():
         global inputs, raw_inputs
