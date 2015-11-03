@@ -14,11 +14,13 @@ try:
 except ImportError:
 	print "Hissss! An error occured, verify that snake_module.py exists and is in the same directory"
 	quit()
+
 try:
 	poll = iclickerII.iclickerII()
 except AttributeError:
 	print "iClicker base not detected, please verify USB connection"
 	quit()
+
 #poll.set_frequency("AB")
 
 current_milli_time = lambda: int(round(time.time() * 1000))
@@ -45,6 +47,7 @@ block_size = 20
 font = pygame.font.SysFont(None, 30)
 second_font = pygame.font.SysFont(None, 22)
 score_font = pygame.font.SysFont(None, 25)
+graph_font = pygame.font.SysFont(None, 20)
 
 text_board = pygame.image.load('text_board.png')
 
@@ -82,6 +85,49 @@ def message_to_screen(msg_title, color, msg_text=None):
 	gameDisplay.blit(screen_text, text_rect)
 	if not msg_text is None:
 		gameDisplay.blit(screen_text2, text2_rect)
+
+def make_input_graph(inputs, color):
+	keys = ['A', 'B', 'C', 'D']
+	keys2 = ["UP", "LEFT", "RIGHT", "DOWN"]
+	graph_size = panel_width - 32
+	xPos = 0.20*graph_size
+	yPos = 4*[0]
+	maxWidth = 0.75 * graph_size
+	height = graph_size/8
+	off = 0.5*height
+
+	for i in range(0,4):
+		yPos[i] = off
+		off += 2*height
+	total = 0.0
+
+	content = pygame.Surface((graph_size, graph_size))
+        content.fill(white)
+	pygame.draw.line(content, color, (xPos, graph_size/32), (xPos, 31*graph_size/32), 2)
+
+	for inp in inputs:
+		total += inp.count
+	i = 0
+	for inp in inputs:
+		width = maxWidth*inp.count/total
+		label1 = graph_font.render(keys[i], True, color)
+                label2 = graph_font.render(keys2[i], True, color)
+		pygame.draw.rect(content, color, [xPos, yPos[i], width, height])
+		content.blit(label1, [5, yPos[i]])
+		content.blit(label2, [5, yPos[i]+20])
+		label3 = graph_font.render(str(inp.count), True, black)
+		content.blit(label3, [xPos+5, yPos[i] + height/2 - 5])
+		i += 1
+	border = pygame.Surface((graph_size+2, graph_size+2))
+	border.fill(grey)
+	border.blit(content, [1,1])
+	return border
+
+def update_input_graphs():
+	graph1 = make_input_graph(raw_inputs[0], snakeA.snake_color)
+	graph2 = make_input_graph(raw_inputs[1], snakeB.snake_color)
+	gameDisplay.blit(graph1, [display_width+15, 10])
+	gameDisplay.blit(graph2, [display_width+15, display_height/2 + 10 + 12])
 
 def text_objects(text, color):
         textSurface = font.render(text,True, color)
@@ -227,10 +273,10 @@ def gameloop(game_input):
 					if apple.effect is 1:
 						snakeA.increase_length()
 					elif apple.effect is -1:
-						snakeA.decrease_length()
-						if snakeA.length <= 0:
+						snakeB.decrease_length()
+						if snakeB.length <= 0:
 							gameOver = True
-							winner = snakeB
+							winner = snakeA
 							game_over(winner)
 							return
 					board.make_block_empty(apple.pos[0], apple.pos[1])
@@ -240,10 +286,10 @@ def gameloop(game_input):
 					if apple.effect is 1:
                                                 snakeB.increase_length()
                                         elif apple.effect is -1:
-                                                snakeB.decrease_length()
-						if snakeB.length <= 0:
+                                                snakeA.decrease_length()
+						if snakeA.length <= 0:
                                                         gameOver = True
-                                                        winner = snakeA
+                                                        winner = snakeB
                                                         game_over(winner)
                                                         return
 
@@ -278,8 +324,8 @@ def update_time_bar(duration):
 	ratio = clamp(0, 1, (current_milli_time() - last_frame_time)/(1000.0*duration))
 	color_change = int(255*ratio)
 	color = (0+color_change, 255-color_change, 0)
-	pygame.draw.rect(gameDisplay, color, [2*board.margin + 15 + board.width, board.margin + board.height/2 - 15, panel_width - 30, 20], 2)
-	pygame.draw.rect(gameDisplay, grey, [2*board.margin + 15 + board.width + 4, board.margin + board.height/2 - 15 + 4, (1 - ratio) * (panel_width - 38), 13])
+	pygame.draw.rect(gameDisplay, color, [2*board.margin + 15 + board.width, board.margin + board.height/2 - 10, panel_width - 30, 20], 2)
+	pygame.draw.rect(gameDisplay, grey, [2*board.margin + 15 + board.width + 4, board.margin + board.height/2 - 10 + 4, (1 - ratio) * (panel_width - 38), 13])
 
 def clear_panel():
 	pygame.draw.rect(gameDisplay, white, [display_width+5, 0, panel_width, display_height])
@@ -296,7 +342,6 @@ def update_inputs():
 	global inputs, raw_inputs
 	i = 0
 	j = 0
-	
 	for group in poll.current_group_responses():
 		j = 0
 		for resp in group[:4]:
@@ -363,6 +408,7 @@ while True:
 	update_inputs()
 	clear_panel()
 	update_time_bar(duration)
+	update_input_graphs()
 	if next_frame_time(duration):
 		gameloop(inputs)
 		poll.restart_poll()

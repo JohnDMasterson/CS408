@@ -20,7 +20,7 @@ class iclickerII:
 		char_identifiers = self.identifiers
 		identifiers = []
 		for i in char_identifiers:
-			identifiers.append(str(ord(i)))
+			identifiers.append(str(ord(i.upper())))
                 old_iClickerResponses = self.poll.iClickerResponses
 		self.groups = defaultdict()
 		#parse the responses
