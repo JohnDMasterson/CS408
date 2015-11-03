@@ -8,10 +8,15 @@ def generatePacket(response, clickerId):
     clickerId_2 = int(clickerId[4:6], 16)
 
     packetData = [0x02, 0x13, int(response, 16), clickerId_0, clickerId_1, clickerId_2, generatePacket.count, 0x00]
-
     packet = iclicker.iPacket(packetData)
+
+    return packet
 generatePacket.count = 0;
 
+def generateResponse(response, clickerId):
+    packet = generatePacket(response, clickerId)
+    response = iclicker.iClickerResponse(packet)
+    return response
 
 base = iclicker.iClickerBaseMock()
 
@@ -109,14 +114,15 @@ class TestIClickerBase(unittest.TestCase):
 
     # poll response tests
     def test_poll_responses(self):
+
+        # empty poll
         error = False
         try:
-            base.start_poll()
-
-            # send responses
-            generatePacket('A', '1F156963')
-
-            base.stop_poll()
+            poll = iclicker.iClickerPollMock()
+            poll.start_poll()
+            poll.end_poll()
+            responses = poll.get_all_responses()
+            assert(responses.length == 0)
         except ValueError as e:
             error = True
         assert(error == False)

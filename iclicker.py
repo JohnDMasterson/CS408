@@ -342,6 +342,25 @@ class iClickerPoll(object):
     def set_display(self, text, line):
         self.iClickerBase.set_base_display(text, line)
 
+class iClickerPollMock(iClickerPoll):
+    def __init__(self):
+        super(iClickerPollMock, self).__init__()
+
+    def _init_base(self):
+        if self.iClickerBase is None:
+            self.iClickerBase = iClickerBaseMock()
+        if self.iClickerBase.initialized is False:
+            self.iClickerBase.init_base()
+
+    def add_response(self, response):
+            super(iClickerPollMock, self).add_response(response)
+
+    def get_all_responses(self):
+            super(iClickerPollMock, self).get_all_responses()
+
+    def get_latest_responses(self):
+            super(iClickerPollMock, self).get_latest_responses()
+
 if __name__ == '__main__':
     try:
         poll = iClickerPoll()
