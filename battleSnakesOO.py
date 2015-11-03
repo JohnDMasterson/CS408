@@ -4,10 +4,21 @@ except ImportError:
 	print "Hissss! An error occured while importing pygame. See http://pygame.org/wiki/GettingStarted for installation instructions"
 	quit()
 import time
-import iclickerII
-from snake_module import *
-
-poll = iclickerII.iclickerII()
+try:
+	import iclickerII
+except ImportError:
+	print "Hissss! An error occured, verify that iclickerII.py exists and is in the same directory"
+	quit()
+try:
+	from snake_module import *
+except ImportError:
+	print "Hissss! An error occured, verify that snake_module.py exists and is in the same directory"
+	quit()
+try:
+	poll = iclickerII.iclickerII()
+except AttributeError:
+	print "iClicker base not detected, please verify USB connection"
+	quit()
 #poll.set_frequency("AB")
 
 current_milli_time = lambda: int(round(time.time() * 1000))
