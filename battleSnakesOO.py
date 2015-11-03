@@ -276,10 +276,10 @@ def gameloop(game_input):
 					if apple.effect is 1:
 						snakeA.increase_length()
 					elif apple.effect is -1:
-						snakeB.decrease_length()
-						if snakeB.length <= 0:
+						snakeA.decrease_length()
+						if snakeA.length <= 0:
 							gameOver = True
-							winner = snakeA
+							winner = snakeB
 							game_over(winner)
 							return
 					board.make_block_empty(apple.pos[0], apple.pos[1])
@@ -289,10 +289,10 @@ def gameloop(game_input):
 					if apple.effect is 1:
                                                 snakeB.increase_length()
                                         elif apple.effect is -1:
-                                                snakeA.decrease_length()
-						if snakeA.length <= 0:
+                                                snakeB.decrease_length()
+						if snakeB.length <= 0:
                                                         gameOver = True
-                                                        winner = snakeB
+                                                        winner = snakeA
                                                         game_over(winner)
                                                         return
 
