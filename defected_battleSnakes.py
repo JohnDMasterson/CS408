@@ -156,12 +156,12 @@ def gameLoop():
 	gameOver = False
 
 	#random coordinates of the apple
-	randAppleX = round(random.randrange(0, display_width - block_size)/10.0)*10.0
-	randAppleY = round(random.randrange(0, display_height - block_size)/10.0)*10.0
+	randAppleX = random.randrange(0, display_width - block_size)
+	randAppleY = random.randrange(0, display_height - block_size)
 
 	#random coordinates of apple 2
-	randApple2X = round(random.randrange(0, display_width - block_size)/10.0)*10.0
-	randApple2Y = round(random.randrange(0, display_height - block_size)/10.0)*10.0
+	randApple2X = random.randrange(0, display_width - block_size)
+	randApple2Y = random.randrange(0, display_height - block_size)
 
 	poll.clear_responses()
 	poll.start_poll()
@@ -262,16 +262,16 @@ def gameLoop():
 
 
 		#when snake goes out of bounds
-		if (lead_x1 >= display_width  or lead_x1 < 0 or lead_y1 >= display_height or lead_y1 < 0) and (lead_x2 >= display_width  or lead_x2 < 0 or lead_y2 >= display_height or lead_y2 < 0):
+		if (lead_x1 >= display_width  +10 or lead_x1 < 0 or lead_y1 >= display_height or lead_y1 < 0) and (lead_x2 >= display_width + 10 or lead_x2 < 0 or lead_y2 >= display_height or lead_y2 < 0):
 			gameOver = True
 			winner = 0
 			print 'tie'
-		elif lead_x1 >= display_width  or lead_x1 < 0 or lead_y1 >= display_height or lead_y1 < 0:
+		elif lead_x1 >= display_width + 10 or lead_x1 < 0 or lead_y1 >= display_height or lead_y1 < 0:
 			print 'out of bounds'
 			gameOver = True
 			winner = 2
 			print winner
-		elif lead_x2 >= display_width  or lead_x2 < 0 or lead_y2 >= display_height or lead_y2 < 0:
+		elif lead_x2 >= display_width +10 or lead_x2 < 0 or lead_y2 >= display_height or lead_y2 < 0:
                         print 'out of bounds'
 			gameOver = True
 			winner = 1
@@ -357,18 +357,18 @@ def gameLoop():
 		if lead_x1 == randApple2X and lead_y1 == randApple2Y:
                         randApple2X = round(random.randrange(0, display_width - block_size)/10.0)*10.0
                         randApple2Y = round(random.randrange(0, display_height - block_size)/10.0)*10.0
-                        snakelength2 = snakelength2 - 1
+                        snakelength1 = snakelength1 - 1
 			if snakelength2 == 0:
 				gameOver = True
-				winner = 1
+				winner = 2
 
 		elif lead_x2 == randApple2X and lead_y2 == randApple2Y:
                         randApple2X = round(random.randrange(0, display_width - block_size)/10.0)*10.0
                         randApple2Y = round(random.randrange(0, display_height - block_size)/10.0)*10.0
-                        snakelength1 = snakelength1 - 1
-			if snakelength1 == 0:
+                        snakelength2 = snakelength2 - 1
+			if snakelength2 == 0:
 				gameOver = True
-				winner = 2
+				winner = 1
 
 		clock.tick(FPS)
 
