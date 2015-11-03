@@ -9,7 +9,7 @@ import logging, time, sys
 import threading
 
 class iPacket(object):
-    def __init__(self, data=None):
+    def __init__(self, data = None):
         if data is None:
             data = []
         self.packet = array('B', data[:64])
@@ -30,21 +30,38 @@ class iPacket(object):
             print "%02X " % character ,
             i = i+1
 
-class BaseAbstract(object):
-    def set_poll_type(self):
-        raise NotImplementedError()
 
-    def set_frequency(self):
-        raise NotImplementedError()
+class BaseInterface(object):
+    initialized = False
+    frequency = None
+    poll_type = None
+    poll_active = False
+    FREQ_DICT = {'a':0,'A':0, 'b':1,'B':1, 'c':2,'C':2, 'd':3,'D':3}
+    POLL_DICT = {'alpha':0, 'numeric':1, 'alphanumeric':2}
+
+    def set_poll_type(self, poll_type = 'alpha'):
+        self.poll_type = self.POLL_DICT[poll_type]
+
+    def set_frequency(self, first = 'A', second = 'A'):
+        self.frequency = [self.FREQ_DICT[first], self.FREQ_DICT[second]]
 
     def set_base_display(self):
         raise NotImplementedError()
 
     def init_base(self):
-        raise NotImplementedError()
+        self.set_frequency()
 
     def start_poll(self):
-        raise NotImplementedError()
+        if (self.poll_active == True):
+            raise ValueError('Attempted to start a poll while a poll was already active.')
+
+        self.poll_active = True
+
+    def stop_poll(self):
+        if (self.poll_active == False):
+            raise ValueError('Attempted to stop a poll while there\'s no active poll.')
+
+        self.poll_active = False
 
     def get_responses(self):
         raise NotImplementedError()
@@ -52,21 +69,23 @@ class BaseAbstract(object):
     def show_responses(self):
         raise NotImplementedError()
 
-class iClickerBaseMock(BaseAbstract):
+class iClickerBaseMock(BaseInterface):
         def set_poll_type(self, poll_type = 'alpha'):
-            print "not setup"
+            super(iClickerBaseMock, self).set_poll_type(poll_type)
 
         def set_frequency(self, first = 'A', second = 'A'):
-            print "not setup"
-
-        def set_base_display(self, string, line):
-            print "not setup"
+            super(iClickerBaseMock, self).set_frequency(first, second)
 
         def init_base(self):
-            print "not setup"
+            super(iClickerBaseMock, self).init_base()
+            self.initialized = True
 
         def start_poll(self, poll_type = 'alpha'):
-            print "not setup"
+            self.set_poll_type(poll_type)
+            super(iClickerBaseMock, self).start_poll()
+
+        def stop_poll(self):
+            super(iClickerBaseMock, self).stop_poll()
 
         def get_responses(self):
             print "not setup"
@@ -74,8 +93,7 @@ class iClickerBaseMock(BaseAbstract):
         def show_responses(self):
             print "not setup"
 
-class iClickerBase(BaseAbstract):
-
+class iClickerBase(BaseInterface):
     # Constants for usb stuff
     VID = 0x1881
     PID = 0x0150
@@ -138,6 +156,7 @@ class iClickerBase(BaseAbstract):
                 self.iBase.set_configuration()
             except:
                 self.iBase = None
+                raise ValueError('iClicker base not recognized: Make sure that it\'s plugged in.')
 
     def set_poll_type(self, poll_type = 'alpha'):
         self.poll_type = self.POLL_DICT[poll_type]
@@ -345,7 +364,11 @@ class iClickerPoll(object):
         self.iClickerBase.set_base_display(text, line)
 
 if __name__ == '__main__':
-    poll = iClickerPoll()
+    try:
+        poll = iClickerPoll()
+    except ValueError as e:
+        print e
+
     poll.set_display("polling", 0)
     poll.start_poll()
     time.sleep(10)

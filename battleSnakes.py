@@ -1,6 +1,7 @@
 import pygame
 import time
 import random
+from collections import Counter
 
 import iclicker
 
@@ -101,8 +102,8 @@ def game_intro():
 		message_to_screen("Press A to choose green snake and press B to choose blue snake !", green)
 		message_to_screen("A = up", green, 50)
 		message_to_screen("B = left", green, 100)
-		message_to_screen("C = down", green, 150)
-		message_to_screen("D = right", green, 200)
+		message_to_screen("C = right", green, 150)
+		message_to_screen("D = down", green, 200)
 
 		message_to_screen("press P to play", red, 250)
 
@@ -193,57 +194,71 @@ def gameLoop():
 
 		teamGreenClicks = poll.get_responses_for_clicker_ids(teamGreen)
 		teamBlueClicks = poll.get_responses_for_clicker_ids(teamBlue)
-		print teamGreenClicks
-		print teamBlueClicks
-		'''
-		#for event in pygame.event.get():
-		while(1):
-			#if event.type == pygame.QUIT:
-			#	gameExit = True
-			#	gameOver = False
-			#if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_LEFT:
-					if direction1 != "right":
-						direction1 = "left"
-						lead_x_change1 = -block_size
-						lead_y_change1 = 0
-				if event.key == pygame.K_RIGHT:
-					if direction1 != "left":
-						direction1 = "right"
-						lead_x_change1 = block_size
-						lead_y_change1 = 0
-				if event.key == pygame.K_UP:
-					if direction1 != "down":
-						direction1 = "up"
-	                                	lead_y_change1 = -block_size
-						lead_x_change1 = 0
-	                        if event.key == pygame.K_DOWN:
-					if direction1 != "up":
-						direction1 = "down"
-	                                	lead_y_change1 = block_size
-						lead_x_change1 = 0
+		#print teamGreenClicks
+		#print teamBlueClicks
 
-				if event.key == pygame.K_a:
-					if direction2 != "right":
-						direction2 = "left"
-                                        	lead_x_change2 = -block_size
-                                        	lead_y_change2 = 0
-                                if event.key == pygame.K_d:
-					if direction2 != "left":
-						direction2 = "right"
-                                        	lead_x_change2 = block_size
-                                        	lead_y_change2 = 0
-                                if event.key == pygame.K_w:
-					if direction2 != "down":
-						direction2 = "up"
-                                        	lead_y_change2 = -block_size
-                                        	lead_x_change2 = 0
-                                if event.key == pygame.K_s:
-					if direction2 != "up":
-						direction2 = "down"
-                                        	lead_y_change2 = block_size
-                                        	lead_x_change2 = 0
-		'''
+		if not teamGreenClicks:
+			greenDirection = 69
+		else:
+			col = Counter(teamGreenClicks)
+			greenDirection, tup = col.most_common(1)[0]
+		if not teamBlueClicks:
+			blueDirection = 69
+		else:
+			col = Counter(teamBlueClicks)
+			blueDirectio, tup = col.most_common(1)[0]
+
+		#if event.type == pygame.QUIT:
+		#	gameExit = True
+		#	gameOver = False
+			#if event.type == pygame.KEYDOWN:
+		if greenDirection == 66:
+			if direction1 != "right":
+				direction1 = "left"
+				lead_x_change1 = -block_size
+				lead_y_change1 = 0
+
+		if greenDirection == 67:
+			if direction1 != "left":
+				direction1 = "right"
+				lead_x_change1 = block_size
+				lead_y_change1 = 0
+		if greenDirection == 65:
+			if direction1 != "down":
+				direction1 = "up"
+	                        lead_y_change1 = -block_size
+				lead_x_change1 = 0
+		if greenDirection == 68:
+			if direction1 != "up":
+				direction1 = "down"
+	                        lead_y_change1 = block_size
+				lead_x_change1 = 0
+
+
+		if blueDirection == 66:
+                        if direction2 != "right":
+                                direction2 = "left"
+                                lead_x_change2 = -block_size
+                                lead_y_change2 = 0
+
+                if blueDirection == 67:
+                        if direction1 != "left":
+                                direction2 = "right"
+                                lead_x_change2 = block_size
+                                lead_y_change2 = 0
+                if blueDirection == 65:
+                        if direction2 != "down":
+                                direction2 = "up"
+                                lead_y_change2 = -block_size
+                                lead_x_change2 = 0
+                if blueDirection == 68:
+                        if direction2 != "up":
+                                direction2 = "down"
+                                lead_y_change2 = block_size
+                                lead_x_change2 = 0
+
+
+
 		#when snake goes out of bounds
 		if (lead_x1 >= display_width  or lead_x1 < 0 or lead_y1 >= display_height or lead_y1 < 0) and (lead_x2 >= display_width  or lead_x2 < 0 or lead_y2 >= display_height or lead_y2 < 0):
 			gameOver = True
