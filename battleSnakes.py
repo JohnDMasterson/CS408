@@ -181,7 +181,6 @@ def gameLoop():
 				message_to_screen("TIED ! , press Q to quit and P to play again", red)
                        	        pygame.display.update()
 			#winner = 0
-			#print 'OUT'
 			for event in pygame.event.get():
 				#print 'IN LOOP'
 				if event.type == pygame.QUIT:
