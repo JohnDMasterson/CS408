@@ -206,7 +206,7 @@ def score(score1, score2):
 def draw_game():
 	pygame.draw.rect(gameDisplay, grey, [board.margin - 1, board.margin - 1, board.width+2, board.height+2], 1)
 	pygame.draw.rect(gameDisplay, beige, [board.margin, board.margin, board.width, board.height])
-	score(snakeA.length - 1, snakeB.length - 1)
+	score(snakeA.length, snakeB.length)
 	print_snake(snakeA)
 	print_snake(snakeB)
 	gameDisplay.blit(appleA.image, (board.block_size*appleA.pos[0]+board.margin, board.block_size*appleA.pos[1]+board.margin))
