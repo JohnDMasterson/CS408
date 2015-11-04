@@ -9,7 +9,7 @@ import logging, time, sys
 import threading
 
 class iPacket(object):
-    def __init__(self, data=None):
+    def __init__(self, data = None):
         if data is None:
             data = []
         self.packet = array('B', data[:64])
@@ -20,7 +20,7 @@ class iPacket(object):
         return self.packet.tostring()
 
     def print_packet(self):
-	print("Packet Data:")
+        print("Packet Data:")
         i = 0;
         for character in self.packet:
             if i%16 == 0 :
@@ -30,8 +30,70 @@ class iPacket(object):
             print "%02X " % character ,
             i = i+1
 
-class iClickerBase(object):
 
+class BaseInterface(object):
+    initialized = False
+    frequency = None
+    poll_type = None
+    poll_active = False
+    FREQ_DICT = {'a':0,'A':0, 'b':1,'B':1, 'c':2,'C':2, 'd':3,'D':3}
+    POLL_DICT = {'alpha':0, 'numeric':1, 'alphanumeric':2}
+
+    def set_poll_type(self, poll_type = 'alpha'):
+        self.poll_type = self.POLL_DICT[poll_type]
+
+    def set_frequency(self, first = 'A', second = 'A'):
+        self.frequency = [self.FREQ_DICT[first], self.FREQ_DICT[second]]
+
+    def set_base_display(self):
+        raise NotImplementedError()
+
+    def init_base(self):
+        self.set_frequency()
+
+    def start_poll(self):
+        if (self.poll_active == True):
+            raise ValueError('Attempted to start a poll while a poll was already active.')
+
+        self.poll_active = True
+
+    def stop_poll(self):
+        if (self.poll_active == False):
+            raise ValueError('Attempted to stop a poll while there\'s no active poll.')
+
+        self.poll_active = False
+
+    def get_responses(self):
+        raise NotImplementedError()
+
+    def show_responses(self):
+        raise NotImplementedError()
+
+class iClickerBaseMock(BaseInterface):
+        def set_poll_type(self, poll_type = 'alpha'):
+            super(iClickerBaseMock, self).set_poll_type(poll_type)
+
+        def set_frequency(self, first = 'A', second = 'A'):
+            super(iClickerBaseMock, self).set_frequency(first, second)
+
+        def init_base(self):
+            super(iClickerBaseMock, self).init_base()
+            self.initialized = True
+
+        def start_poll(self, poll_type = 'alpha'):
+            self.set_poll_type(poll_type)
+            super(iClickerBaseMock, self).start_poll()
+
+        def stop_poll(self):
+            super(iClickerBaseMock, self).stop_poll()
+
+        def get_responses(self):
+            print "not setup"
+
+        def show_responses(self):
+            print "not setup"
+
+class iClickerBase(BaseInterface):
     # Constants for usb stuff
     VID = 0x1881
     PID = 0x0150
@@ -55,15 +117,17 @@ class iClickerBase(object):
         self.usb_lock = threading.RLock()
 
     def ctrl_transfer(self, data):
-        packet = iPacket(data)
-        with self.usb_lock:
-            self.iBase.ctrl_transfer(self.BRT, self.PBR, self.VAL, self.IDX, packet.packet_data())
-        time.sleep(0.2)
+        try:
+            packet = iPacket(data)
+            with self.usb_lock:
+                self.iBase.ctrl_transfer(self.BRT, self.PBR, self.VAL, self.IDX, packet.packet_data())
+            time.sleep(0.2)
+        except:
+            time.sleep(0.2)
 
     def syncronous_ctrl_transfer(self, data):
         self.ctrl_transfer(data)
         packet = self.read_packet()
-        packet.print_packet()
 
     def _read(self):
         with self.usb_lock:
@@ -84,11 +148,15 @@ class iClickerBase(object):
 
     def get_base(self):
         with self.usb_lock:
-            backend = usb.backend.libusb1.get_backend(find_library=lambda x: "/usr/lib/libusb-1.0.so")
-            self.iBase = usb.core.find(idVendor=self.VID, idProduct=self.PID, backend=backend)
-            if self.iBase.is_kernel_driver_active(0):
-                self.iBase.detach_kernel_driver(0)
-            self.iBase.set_configuration()
+            try:
+                backend = usb.backend.libusb1.get_backend(find_library=lambda x: "/usr/lib/libusb-1.0.so")
+                self.iBase = usb.core.find(idVendor=self.VID, idProduct=self.PID, backend=backend)
+                if self.iBase.is_kernel_driver_active(0):
+                    self.iBase.detach_kernel_driver(0)
+                self.iBase.set_configuration()
+            except:
+                self.iBase = None
+                raise ValueError('iClicker base not recognized: Make sure that it\'s plugged in.')
 
     def set_poll_type(self, poll_type = 'alpha'):
         self.poll_type = self.POLL_DICT[poll_type]
@@ -99,7 +167,7 @@ class iClickerBase(object):
         data = [0x01, 0x2D]
         self.syncronous_ctrl_transfer(data)
 
-    def set_frequency(self, first = 'A', second = 'B'):
+    def set_frequency(self, first = 'A', second = 'A'):
         first = self.FREQ_DICT[first]
         second = self.FREQ_DICT[second]
         self.frequency = [first, second]
@@ -154,33 +222,29 @@ class iClickerBase(object):
         data = [0x01, 0x11]
         self.syncronous_ctrl_transfer(data)
 
+    def stop_poll(self):
+        data = [0x01, 0x12]
+        self.syncronous_ctrl_transfer(data)
+        data = [0x01, 0x16]
+        self.syncronous_ctrl_transfer(data)
+        data = [0x01, 0x17, 0x01]
+        self.syncronous_ctrl_transfer(data)
+        data = [0x01, 0x17, 0x03]
+        self.syncronous_ctrl_transfer(data)
+        data = [0x01, 0x17, 0x04]
+        self.syncronous_ctrl_transfer(data)
+
     def get_responses(self):
         responses = []
         data = self.read_data()
         if data is not None:
             packet = iPacket(data)
-            packet.print_packet()
             response1 = iClickerResponse(data[:32])
             response1.parse_alpha_response()
             response2 = iClickerResponse(data[32:64])
             response2.parse_alpha_response()
             responses = [response1, response2]
         return responses
-
-    def show_responses(self):
-        show = 0
-        while show < 10:
-            data = self.read_data()
-            if data is not None:
-                packet = iPacket(data)
-                packet.print_packet()
-                response = iClickerResponse(data[:32])
-                response.parse_alpha_response()
-                response.print_response()
-                response = iClickerResponse(data[32:64])
-                response.parse_alpha_response()
-                response.print_response()
-                show = show + 1
 
 class iClickerResponse(object):
 
@@ -237,13 +301,16 @@ class iClickerPoll(object):
         self.last_response_num = 0
         self.isPolling = False
         self.pollThread = None
+        self._init_base()
 
-    def start_poll(self):
+    def _init_base(self):
         if self.iClickerBase is None:
             self.iClickerBase = iClickerBase()
             self.iClickerBase.get_base()
         if self.iClickerBase.initialized is False:
             self.iClickerBase.init_base()
+
+    def start_poll(self):
         self.iClickerBase.start_poll()
         self.isPolling = True
         self.poll_loop()
@@ -257,13 +324,14 @@ class iClickerPoll(object):
         while self.isPolling is True:
             responses = self.iClickerBase.get_responses()
             for response in responses:
-                response.print_response()
                 self.add_response(response)
-            #if len(self.iClickerResponses) > 10:
-            #    self.end_poll()
 
     def end_poll(self):
         self.isPolling = False
+        self.iClickerBase.stop_poll()
+
+    def clear_responses(self):
+        self.iClickerResponses = defaultdict(list)
 
     def add_response(self, response):
         if response.response_num > self.last_response_num:
@@ -272,10 +340,41 @@ class iClickerPoll(object):
         elif    self.last_response_num == 255 and response.response_num == 1:
             self.iClickerResponses[response.clicker_id].append(response)
             last_response_num = response.response_num
-        print len(self.iClickerResponses)
+
+    def get_all_responses(self):
+        return self.iClickerResponses
+
+    def get_latest_responses(self):
+        responses = defaultdict(list)
+        for key in self.iClickerResponses:
+            curr = self.iClickerResponses[key][-1]
+            responses[curr.clicker_id] = curr
+        return responses
+
+    def get_responses_for_clicker_ids(self, clicker_ids):
+        responses = []
+        for clicker_id in clicker_ids:
+            response = self.iClickerResponses[clicker_id]
+            if len(response) > 0:
+                response = response[-1]
+                responses.append(response.response)
+        return responses
+
+    def set_display(self, text, line):
+        self.iClickerBase.set_base_display(text, line)
 
 if __name__ == '__main__':
-    poll = iClickerPoll()
+    try:
+        poll = iClickerPoll()
+    except ValueError as e:
+        print e
+
+    poll.set_display("polling", 0)
     poll.start_poll()
-    while True:
-        a = 1
+    time.sleep(10)
+    poll.end_poll()
+    poll.set_display("done", 0)
+
+    responses = poll.get_all_responses()
+    for key in responses:
+        responses[key][1].print_response()
