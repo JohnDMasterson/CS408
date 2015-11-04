@@ -33,9 +33,8 @@ font = pygame.font.SysFont(None, 25)
 
 winner = 0
 
-snakeHead1 = pygame.image.load('snakeHead1.png')
-apple = pygame.image.load('apple.png')
-apple2 = pygame.image.load('apple2.png')
+apple = pygame.image.load('apple_defected.jpg')
+apple2 = pygame.image.load('apple2_defected.jpg')
 
 direction1 = "left"
 direction2 = "right"
@@ -51,18 +50,6 @@ def score(score1, score2):
 
 #functions for printing snakes
 def snake1(snakelist1, block_size):
-	'''
-	if direction1 == "right":
-		head1 = pygame.transform.rotate(snakeHead1, 270)
-	if direction1 == "left":
-                head1 = pygame.transform.rotate(snakeHead1, 90)
-	if direction1 == "up":
-                head1 = snakeHead1
-	if direction1 == "down":
-                head1 = pygame.transform.rotate(snakeHead1, 180)
-	'''
-	#gameDisplay.blit(head1, (snakelist1[-1][0], snakelist1[-1][1]))
-	#for XnY in snakelist1[:-1]:
 	for XnY in snakelist1:
 		for XnY in snakelist1:
 			pygame.draw.rect(gameDisplay, green, [XnY[0], XnY[1], block_size, block_size])
@@ -156,12 +143,12 @@ def gameLoop():
 	gameOver = False
 
 	#random coordinates of the apple
-	randAppleX = random.randrange(0, display_width - block_size)
-	randAppleY = random.randrange(0, display_height - block_size)
+	randAppleX = random.randrange(0, display_width - 55)
+	randAppleY = random.randrange(0, display_height - 67)
 
 	#random coordinates of apple 2
-	randApple2X = random.randrange(0, display_width - block_size)
-	randApple2Y = random.randrange(0, display_height - block_size)
+	randApple2X = random.randrange(0, display_width - 42)
+	randApple2Y = random.randrange(0, display_height - 11)
 
 	poll.clear_responses()
 	poll.start_poll()
@@ -169,6 +156,7 @@ def gameLoop():
 	while not gameExit:
 		global winner
 		while gameOver == True:
+			poll.end_poll()
 			gameDisplay.fill(white)
 			#print winner
 			if winner == 1:
@@ -188,11 +176,9 @@ def gameLoop():
                                 	gameExit = True
                                 	gameOver = False
 				if event.type == pygame.KEYDOWN:
-					if event.key == pygame.K_q:
-						gameExit = True
-						gameOver = False
 					if event.key == pygame.K_p:
 						gameLoop()
+						
 
 		teamGreenClicks = poll.get_responses_for_clicker_ids(teamGreen)
 		teamBlueClicks = poll.get_responses_for_clicker_ids(teamBlue)
@@ -215,58 +201,46 @@ def gameLoop():
 		#	gameOver = False
 			#if event.type == pygame.KEYDOWN:
 		if greenDirection == 66:
-			if direction1 != "right":
-				direction1 = "left"
-				lead_x_change1 = -block_size
-				lead_y_change1 = 0
+			direction1 = "left"
+			lead_x_change1 = -block_size
+			lead_y_change1 = 0
 
 		if greenDirection == 67:
-			if direction1 != "left":
-				direction1 = "right"
-				lead_x_change1 = block_size
-				lead_y_change1 = 0
+			direction1 = "right"
+			lead_x_change1 = block_size
+			lead_y_change1 = 0
 		if greenDirection == 65:
-			if direction1 != "down":
-				direction1 = "up"
-	                        lead_y_change1 = -block_size
-				lead_x_change1 = 0
+			direction1 = "up"
+	                lead_y_change1 = -block_size
+			lead_x_change1 = 0
 		if greenDirection == 68:
-			if direction1 != "up":
-				direction1 = "down"
-	                        lead_y_change1 = block_size
-				lead_x_change1 = 0
+			direction1 = "down"
+	                lead_y_change1 = block_size
+			lead_x_change1 = 0
 
 
 		if blueDirection == 66:
-                        if direction2 != "right":
-                                direction2 = "left"
-                                lead_x_change2 = -block_size
-                                lead_y_change2 = 0
+                        direction2 = "left"
+                        lead_x_change2 = -block_size
+                        lead_y_change2 = 0
 
                 if blueDirection == 67:
-                        if direction1 != "left":
-                                direction2 = "right"
-                                lead_x_change2 = block_size
-                                lead_y_change2 = 0
+                        direction2 = "right"
+                        lead_x_change2 = block_size
+                        lead_y_change2 = 0
                 if blueDirection == 65:
-                        if direction2 != "down":
-                                direction2 = "up"
-                                lead_y_change2 = -block_size
-                                lead_x_change2 = 0
+                        direction2 = "up"
+                        lead_y_change2 = -block_size
+                        lead_x_change2 = 0
                 if blueDirection == 68:
-                        if direction2 != "up":
-                                direction2 = "down"
-                                lead_y_change2 = block_size
-                                lead_x_change2 = 0
+                        direction2 = "down"
+                        lead_y_change2 = block_size
+                        lead_x_change2 = 0
 
 
 
 		#when snake goes out of bounds
-		if (lead_x1 >= display_width  +10 or lead_x1 < 0 or lead_y1 >= display_height or lead_y1 < 0) and (lead_x2 >= display_width + 10 or lead_x2 < 0 or lead_y2 >= display_height or lead_y2 < 0):
-			gameOver = True
-			winner = 0
-			print 'tie'
-		elif lead_x1 >= display_width + 10 or lead_x1 < 0 or lead_y1 >= display_height or lead_y1 < 0:
+		if lead_x1 >= display_width + 10 or lead_x1 < 0 or lead_y1 >= display_height or lead_y1 < 0:
 			print 'out of bounds'
 			gameOver = True
 			winner = 2
@@ -314,12 +288,10 @@ def gameLoop():
 		if snakehead2 == snakehead1:
 			print 'found head on'
 			gameOver = True
-			if len(snakelist1) > len(snakelist2):
+			if len(snakelist1) >= len(snakelist2):
 				winner = 1
 			elif len(snakelist2) > len(snakelist1):
 				winner = 2
-			else:
-				winner = 0
 
 		#checking for self collision
 		for each1 in snakelist1[:-1]:
@@ -341,34 +313,28 @@ def gameLoop():
 		snake1(snakelist1, block_size)
 		snake2(snakelist2, block_size)
 
-		score(snakelength1 - 1, snakelength2 - 1)
+		score(snakelength1, snakelength2)
 
 		pygame.display.update()
 
 		#if apple eaten, create new apple and update length
 		if lead_x1 == randAppleX and lead_y1 == randAppleY:
-			randAppleX = round(random.randrange(0, display_width - block_size)/10.0)*10.0
-        		randAppleY = round(random.randrange(0, display_height - block_size)/10.0)*10.0
-			snakelength1 += 1
+			randAppleX = random.randrange(0, display_width - block_size)
+        		randAppleY = random.randrange(0, display_height - block_size)
+			snakelength1 += 2
 		elif lead_x2 == randAppleX and lead_y2 == randAppleY:
-                        randAppleX = round(random.randrange(0, display_width - block_size)/10.0)*10.0
-                        randAppleY = round(random.randrange(0, display_height - block_size)/10.0)*10.0
-			snakelength2 += 1
+                        randAppleX = random.randrange(0, display_width - block_size)
+                        randAppleY = random.randrange(0, display_height - block_size)
+			snakelength2 += 2
 		if lead_x1 == randApple2X and lead_y1 == randApple2Y:
-                        randApple2X = round(random.randrange(0, display_width - block_size)/10.0)*10.0
-                        randApple2Y = round(random.randrange(0, display_height - block_size)/10.0)*10.0
+                        randApple2X = random.randrange(0, display_width - block_size)
+                        randApple2Y = random.randrange(0, display_height - block_size)
                         snakelength1 = snakelength1 - 1
-			if snakelength2 == 0:
-				gameOver = True
-				winner = 2
 
 		elif lead_x2 == randApple2X and lead_y2 == randApple2Y:
-                        randApple2X = round(random.randrange(0, display_width - block_size)/10.0)*10.0
-                        randApple2Y = round(random.randrange(0, display_height - block_size)/10.0)*10.0
+                        randApple2X = random.randrange(0, display_width - block_size)
+                        randApple2Y = random.randrange(0, display_height - block_size)
                         snakelength2 = snakelength2 - 1
-			if snakelength2 == 0:
-				gameOver = True
-				winner = 1
 
 		clock.tick(FPS)
 
