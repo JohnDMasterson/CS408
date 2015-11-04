@@ -323,8 +323,9 @@ class iClickerPoll(object):
     def _poll_loop_thread(self):
         while self.isPolling is True:
             responses = self.iClickerBase.get_responses()
-            for response in responses:
-                self.add_response(response)
+            if responses != None:
+                for response in responses:
+                    self.add_response(response)
 
     def end_poll(self):
         self.isPolling = False
@@ -373,14 +374,22 @@ class iClickerPollMock(iClickerPoll):
         if self.iClickerBase.initialized is False:
             self.iClickerBase.init_base()
 
+    def start_poll(self):
+        self.iClickerBase.start_poll()
+        self.isPolling = True
+
     def add_response(self, response):
-            super(iClickerPollMock, self).add_response(response)
+        super(iClickerPollMock, self).add_response(response)
 
     def get_all_responses(self):
-            super(iClickerPollMock, self).get_all_responses()
+        return self.iClickerResponses
 
     def get_latest_responses(self):
-            super(iClickerPollMock, self).get_latest_responses()
+        responses = defaultdict(list)
+        for key in self.iClickerResponses:
+            curr = self.iClickerResponses[key][-1]
+            responses[curr.clicker_id] = curr
+        return responses
 
 if __name__ == '__main__':
     try:
