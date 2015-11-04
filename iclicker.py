@@ -363,6 +363,33 @@ class iClickerPoll(object):
     def set_display(self, text, line):
         self.iClickerBase.set_base_display(text, line)
 
+class iClickerPollMock(iClickerPoll):
+    def __init__(self):
+        super(iClickerPollMock, self).__init__()
+
+    def _init_base(self):
+        if self.iClickerBase is None:
+            self.iClickerBase = iClickerBaseMock()
+        if self.iClickerBase.initialized is False:
+            self.iClickerBase.init_base()
+
+    def start_poll(self):
+        self.iClickerBase.start_poll()
+        self.isPolling = True
+
+    def add_response(self, response):
+        super(iClickerPollMock, self).add_response(response)
+
+    def get_all_responses(self):
+        return self.iClickerResponses
+
+    def get_latest_responses(self):
+        responses = defaultdict(list)
+        for key in self.iClickerResponses:
+            curr = self.iClickerResponses[key][-1]
+            responses[curr.clicker_id] = curr
+        return responses
+
 if __name__ == '__main__':
     try:
         poll = iClickerPoll()
