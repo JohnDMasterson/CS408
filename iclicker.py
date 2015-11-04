@@ -323,9 +323,8 @@ class iClickerPoll(object):
     def _poll_loop_thread(self):
         while self.isPolling is True:
             responses = self.iClickerBase.get_responses()
-            if responses != None:
-                for response in responses:
-                    self.add_response(response)
+            for response in responses:
+                self.add_response(response)
 
     def end_poll(self):
         self.isPolling = False
