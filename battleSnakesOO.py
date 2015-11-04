@@ -138,7 +138,8 @@ def text_objects(text, color):
 
 def old_message_to_screen(msg, color, y = 0):
         textSurf, textRect = text_objects(msg, color)
-        textRect.center = (display_width/2), (display_height/2)+y
+        #textRect.center = (display_width/2), (display_height/2)+y
+	textRect.center = 0, (display_height/2)+y
         gameDisplay.blit(textSurf, textRect)
         #screen_text = font.render(msg, True, color)
         #gameDisplay.blit(screen_text, [display_width/2, display_height/2])
