@@ -322,7 +322,7 @@ def clear_panel():
 def clear_raw_inputs():
 	global raw_inputs, inputs
 	if inputs is None:
-		inputs = [GameInput('u', 0), GameInput('d', 0)]
+		inputs = [GameInput('u', 0), GameInput('u', 0)]
 	for inp in inputs:
 		inp.count = 0
 	raw_inputs = [[GameInput('u', 0), GameInput('l', 0), GameInput('r', 0), GameInput('d', 0)], [GameInput('u', 0), GameInput('l', 0), GameInput('r', 0), GameInput('d', 0)]]
