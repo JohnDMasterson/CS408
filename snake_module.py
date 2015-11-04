@@ -93,9 +93,9 @@ class Snake:
                         self.length = self.length
 
 	def out_of_bounds(self):
-		if self.head[0] >= self.board.num_hor_blocks or self.head[0] < 0:
+		if self.head[0] >= self.board.num_hor_blocks+5 or self.head[0] < 0:
 			return True
-		elif self.head[1] >= self.board.num_ver_blocks or self.head[1] < 0:
+		elif self.head[1] >= self.board.num_ver_blocks+5 or self.head[1] < 0:
 			return True
 		else:
 			return False
@@ -136,7 +136,7 @@ class Board:
 
         def random_empty_block(self):
                 point = self.int_to_point(random.choice(self.empty_blocks))
-		self.make_block_occupied(point[0], point[1])
+		#self.make_block_occupied(point[0], point[1])
 		return point
 
         def point_to_int(self, x, y):
