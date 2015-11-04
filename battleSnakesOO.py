@@ -193,7 +193,7 @@ def edge_case_winner(snakeA, snakeB):
 		return snakeB
 	else:
 		#no winner
-		return None
+		return snakeA
 
 
 def score(score1, score2):
@@ -239,7 +239,7 @@ def gameloop(game_input):
 				gameOver = True
 			#check if snakes are out of bounds
 			elif snakeA.out_of_bounds() and snakeB.out_of_bounds():
-				winner = edge_case_winner(snakeA, snakeB)
+				winner = snakeA#edge_case_winner(snakeA, snakeB)
 				print "Out of Bounds"
 				gameOver = True
 			elif snakeA.out_of_bounds():
@@ -265,6 +265,7 @@ def gameloop(game_input):
 				if snakeA.head == apple.pos:
 					if apple.effect is 1:
 						snakeA.increase_length()
+						snakeA.increase_length()
 					elif apple.effect is -1:
 						snakeA.decrease_length()
 						if snakeA.length <= 0:
@@ -276,6 +277,7 @@ def gameloop(game_input):
 				elif snakeB.head == apple.pos:
 					if apple.effect is 1:
                                                 snakeB.increase_length()
+						snakeB.increase_length()
                                         elif apple.effect is -1:
                                                 snakeB.decrease_length()
 						if snakeB.length <= 0:
