@@ -61,8 +61,8 @@ gameExit = False
 gameOver = False
 game_over_shown = False
 
-image1 = pygame.transform.scale(pygame.image.load('apple.png'), (block_size, block_size))
-image2 = pygame.transform.scale(pygame.image.load('apple2.png'), (block_size, block_size))
+image1 = pygame.transform.scale(pygame.image.load('apple_defected.jpg'), (block_size, block_size))
+image2 = pygame.transform.scale(pygame.image.load('apple2_defected.jpg'), (block_size, block_size))
 
 appleA = Apple(0, 0, image1, 1)
 appleB = Apple(0, 0, image2, -1)
@@ -220,7 +220,6 @@ def gameloop(game_input):
 
 	if not gameExit:
 		if gameOver:
-			#draw_game()
 			#show game over text
 			game_over(winner, game_input)
 			#print "game over"
@@ -237,27 +236,19 @@ def gameloop(game_input):
 				winner = edge_case_winner(snakeA, snakeB)
 				print "Collision"
 				gameOver = True
-				game_over(winner)
-				return
 			#check if snakes are out of bounds
 			elif snakeA.out_of_bounds() and snakeB.out_of_bounds():
 				winner = edge_case_winner(snakeA, snakeB)
 				print "Out of Bounds"
 				gameOver = True
-				game_over(winner)
-				return
 			elif snakeA.out_of_bounds():
 				winner = snakeB
 				print "Out of BoundA"
 				gameOver = True
-				game_over(winner)
-				return
 			elif snakeB.out_of_bounds():
 				winner = snakeA
 				print "Out of Bounds B"
 				gameOver = True
-				game_over(winner)
-				return
 			#check for collision (self collision is also collision)
 			if snakeA.collided(snakeB) or snakeB.collided(snakeA):
 				if snakeA.collided(snakeB) and snakeB.collided(snakeA):
@@ -268,8 +259,6 @@ def gameloop(game_input):
 					winner = snakeA
 				print "Collided"	
 				gameOver = True
-				game_over(winner)
-				return
 			#check if apples got eaten
 			for apple in apples:
 				if snakeA.head == apple.pos:
@@ -280,8 +269,6 @@ def gameloop(game_input):
 						if snakeA.length <= 0:
 							gameOver = True
 							winner = snakeB
-							game_over(winner)
-							return
 					board.make_block_empty(apple.pos[0], apple.pos[1])
 					#create new apple
 					apple.pos = board.random_empty_block()
@@ -293,14 +280,13 @@ def gameloop(game_input):
 						if snakeB.length <= 0:
                                                         gameOver = True
                                                         winner = snakeA
-                                                        game_over(winner)
-                                                        return
 
 					board.make_block_empty(apple.pos[0], apple.pos[1])
 					apple.pos = board.random_empty_block()
+			draw_game()
 			#draw all the stuff
-			if not gameOver:
-				draw_game()
+			if gameOver:
+				game_over(winner)
 	else:
 		pygame.quit()
 		quit()

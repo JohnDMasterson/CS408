@@ -20,8 +20,8 @@ class Snake:
 		self.length = 1
 		self.last_head = start_pos
 		self.head = start_pos
-		self.direction = '0'
-                self.direction_block = [0, 0]
+		#self.direction = '0'
+                #self.direction_block = [0, 0]
 		for each in self.snake_list:
                         self.board.make_block_empty(each[0], each[1])
 		self.snake_list = []
