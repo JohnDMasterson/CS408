@@ -182,8 +182,8 @@ def game_over(winner_snake, game_input=None):
 			game_over_shown = False
 			gameOver = False
 			draw_game()
-		elif inp.key is 'l': #B
-			quit()
+		#elif inp.key is 'l': #B
+		#	quit()
 
 def edge_case_winner(snakeA, snakeB):
 	#no winner or winner is longer snake
@@ -268,9 +268,9 @@ def gameloop(game_input):
 						snakeA.increase_length()
 					elif apple.effect is -1:
 						snakeA.decrease_length()
-						if snakeA.length <= 0:
-							gameOver = True
-							winner = snakeB
+						#if snakeA.length <= 0:
+						#	gameOver = True
+						#	winner = snakeB
 					board.make_block_empty(apple.pos[0], apple.pos[1])
 					#create new apple
 					apple.pos = board.random_empty_block()
@@ -280,9 +280,9 @@ def gameloop(game_input):
 						snakeB.increase_length()
                                         elif apple.effect is -1:
                                                 snakeB.decrease_length()
-						if snakeB.length <= 0:
-                                                        gameOver = True
-                                                        winner = snakeA
+						#if snakeB.length <= 0:
+                                                #       gameOver = True
+                                                #        winner = snakeA
 
 					board.make_block_empty(apple.pos[0], apple.pos[1])
 					apple.pos = board.random_empty_block()

@@ -31,8 +31,8 @@ class Snake:
 	def change_direction(self, new_direction):
 		if new_direction == self.direction:
 			return
-		elif new_direction == self.opposite_direction(self.direction):
-			return
+		#elif new_direction == self.opposite_direction(self.direction):
+		#	return
 		elif new_direction == 'u':
 			self.direction_block = [0, -1]
 			self.direction = new_direction
