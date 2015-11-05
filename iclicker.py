@@ -8,13 +8,15 @@ from collections import defaultdict, Counter
 import logging, time, sys
 import threading
 
+# packets should be 64 bytes long
+# packts should be padded with 0x0 after data being sent
 class iPacket(object):
+
     def __init__(self, data = None):
         if data is None:
             data = []
-        self.packet = array('B', data[:64])
-        length = len(self.packet)
-        self.packet.extend([0]* (64-length))
+        #copy data from packet
+        self.packet = array('B', data[:len(data)])
 
     def packet_data(self):
         return self.packet.tostring()
@@ -256,7 +258,8 @@ class iClickerResponse(object):
 
     def parse_alpha_response(self):
         if self.is_valid_response():
-            self.response = self.data[2] - 0x81 + 65
+            # response - 0x81 + 65 get an 'a' response to equal to ascii a value
+            self.response = self.data[2] - 0x80 + 65
             self.get_id_from_alpha_response()
         else:
             self.response = -1
@@ -291,7 +294,11 @@ class iClickerResponse(object):
         print "Clicker Response Num: %d" % self.response_num
 
     def is_valid_response(self):
-        return self.data[0] == 0x02 and self.data[1] == 0x13 and len(self.data) == 32
+        # responses should be 32 bytes long
+        responseLength = len(self.data);
+        # first byte is 0x02
+        # second bytes is 0x13
+        return self.data[0] == 0x02 and self.data[1] == 0x13
 
 class iClickerPoll(object):
 
@@ -320,11 +327,13 @@ class iClickerPoll(object):
         t.daemon = True
         t.start()
 
+    # can be up to two responses in each iclicker response
+    # each response is 32 bytes long
     def _poll_loop_thread(self):
         while self.isPolling is True:
             responses = self.iClickerBase.get_responses()
-            for response in responses:
-                self.add_response(response)
+            # add first response from poll
+            self.add_response(responses[-1])
 
     def end_poll(self):
         self.isPolling = False
@@ -334,12 +343,13 @@ class iClickerPoll(object):
         self.iClickerResponses = defaultdict(list)
 
     def add_response(self, response):
-        if response.response_num > self.last_response_num:
-            self.iClickerResponses[response.clicker_id].append(response)
-            last_response_num = response.response_num
-        elif    self.last_response_num == 255 and response.response_num == 1:
-            self.iClickerResponses[response.clicker_id].append(response)
-            last_response_num = response.response_num
+        # every response has a number 0-255. This number is incremented by 1 for each response recieved
+        # it resets to 0 after 255
+
+        # reset bucket for each response when a new one is given
+        self.iClickerResponses[response.clicker_id] = []
+        # append to end of bucket
+        self.iClickerResponses[response.clicker_id].append(response)
 
     def get_all_responses(self):
         return self.iClickerResponses
