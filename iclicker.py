@@ -333,7 +333,8 @@ class iClickerPoll(object):
         while self.isPolling is True:
             responses = self.iClickerBase.get_responses()
             # add first response from poll
-            self.add_response(responses[-1])
+            if len(responses) > 0:
+                self.add_response(responses[-1])
 
     def end_poll(self):
         self.isPolling = False
