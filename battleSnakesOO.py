@@ -17,7 +17,7 @@ except ImportError:
 
 try:
 	poll = iclickerII.iclickerII()
-except AttributeError:
+except ValueError:
 	print "iClicker base not detected, please verify USB connection"
 	quit()
 
