@@ -112,13 +112,14 @@ def make_input_graph(inputs, color):
 		if total == 0:
 			width = 0
 		else:
-			width = maxWidth*inp.count/total
+			width = 2*maxWidth*inp.count/total
 		label1 = graph_font.render(keys[i], True, color)
                 label2 = graph_font.render(keys2[i], True, color)
 		pygame.draw.rect(content, color, [xPos, yPos[i], width, height])
 		content.blit(label1, [5, yPos[i]])
 		content.blit(label2, [5, yPos[i]+20])
-		label3 = graph_font.render(str(inp.count), True, black)
+		#label3 = graph_font.render(str(inp.count), True, black)
+		label3 = graph_font.render(str(len(inputs)), True, black)
 		content.blit(label3, [xPos+5, yPos[i] + height/2 - 5])
 		i += 1
 	border = pygame.Surface((graph_size+2, graph_size+2))
@@ -176,15 +177,15 @@ def game_over(winner_snake, game_input=None):
 		inp = game_input[1]
 		if game_input[0].count > game_input[1].count:
 			inp = game_input[0]
-		if inp.key is 'u':#A
+		'''if inp.key is 'u':#A
 			snakeA.reset_snake(board.random_empty_block())
 			snakeB.reset_snake(board.random_empty_block())
 			game_over_shown = False
 			gameOver = False
 			draw_game()
-		#elif inp.key is 'l': #B
-		#	quit()
-
+		elif inp.key is 'l': #B
+			quit()
+		'''
 def edge_case_winner(snakeA, snakeB):
 	#no winner or winner is longer snake
 	if snakeA.length > snakeB.length:
@@ -325,7 +326,7 @@ def clear_panel():
 def clear_raw_inputs():
 	global raw_inputs, inputs
 	if inputs is None:
-		inputs = [GameInput('u', 0), GameInput('u', 0)]
+		inputs = [GameInput('d', 0), GameInput('d', 0)]
 	for inp in inputs:
 		inp.count = 0
 	raw_inputs = [[GameInput('u', 0), GameInput('l', 0), GameInput('r', 0), GameInput('d', 0)], [GameInput('u', 0), GameInput('l', 0), GameInput('r', 0), GameInput('d', 0)]]
